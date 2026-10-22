@@ -1,0 +1,337 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "L'appareil est déjà configuré"
+    },
+    "error": {
+      "cannot_connect": "Échec de la connexion",
+      "not_a_domeo_evo": "Un appareil répond à cette adresse, mais pas comme une DOMEO EVO.",
+      "unit_silent": "La liaison fonctionne, mais la VMC ne répond pas. Vérifiez que le cavalier JP1 est fermé et que les réglages de ligne (19200 bauds, parité paire, 1 bit de stop par défaut) correspondent à la VMC.",
+      "unknown": "Erreur inattendue"
+    },
+    "step": {
+      "reconfigure": {
+        "menu_options": {
+          "reconfigure_serial": "Port série (adaptateur USB RS485)",
+          "reconfigure_tcp": "Réseau (passerelle RS485 vers Modbus TCP)"
+        },
+        "title": "Comment la VMC est-elle désormais raccordée ?"
+      },
+      "reconfigure_serial": {
+        "data": {
+          "baudrate": "Vitesse (bauds)",
+          "device": "Périphérique",
+          "model": "Modèle",
+          "parity": "Parité",
+          "unit_id": "ID Modbus",
+          "variant": "Version"
+        },
+        "data_description": {
+          "baudrate": "La vitesse de ligne de la VMC. Réglage d'usine : 19200.",
+          "device": "L'adaptateur RS485 auquel la VMC est raccordée.",
+          "model": "La taille indiquée sur la plaque de la VMC. Elle fixe les plages de débit autorisées.",
+          "parity": "La parité de la VMC. Réglage d'usine : paire.",
+          "unit_id": "L'adresse Modbus de la VMC. Réglage d'usine : 1.",
+          "variant": "Les versions DHU et Sérénité régulent selon l'humidité ou la qualité d'air. Pas la version FL."
+        },
+        "title": "VMC sur un port série"
+      },
+      "reconfigure_tcp": {
+        "data": {
+          "host": "Hôte",
+          "model": "Modèle",
+          "port": "Port",
+          "unit_id": "ID Modbus",
+          "variant": "Version"
+        },
+        "data_description": {
+          "host": "Le nom ou l'adresse IP de la passerelle RS485. Réglez-la en Modbus TCP vers RTU, 19200 bauds, parité paire, 1 bit de stop.",
+          "model": "La taille indiquée sur la plaque de la VMC. Elle fixe les plages de débit autorisées.",
+          "port": "Le port Modbus TCP de la passerelle, en général 502.",
+          "unit_id": "L'adresse Modbus de la VMC. Réglage d'usine : 1.",
+          "variant": "Les versions DHU et Sérénité régulent selon l'humidité ou la qualité d'air. Pas la version FL."
+        },
+        "title": "VMC derrière une passerelle Modbus TCP"
+      },
+      "serial": {
+        "data": {
+          "baudrate": "Vitesse (bauds)",
+          "device": "Périphérique",
+          "model": "Modèle",
+          "parity": "Parité",
+          "unit_id": "ID Modbus",
+          "variant": "Version"
+        },
+        "data_description": {
+          "baudrate": "La vitesse de ligne de la VMC. Réglage d'usine : 19200.",
+          "device": "L'adaptateur RS485 auquel la VMC est raccordée.",
+          "model": "La taille indiquée sur la plaque de la VMC. Elle fixe les plages de débit autorisées.",
+          "parity": "La parité de la VMC. Réglage d'usine : paire.",
+          "unit_id": "L'adresse Modbus de la VMC. Réglage d'usine : 1.",
+          "variant": "Les versions DHU et Sérénité régulent selon l'humidité ou la qualité d'air. Pas la version FL."
+        },
+        "title": "VMC sur un port série"
+      },
+      "tcp": {
+        "data": {
+          "host": "Hôte",
+          "model": "Modèle",
+          "port": "Port",
+          "unit_id": "ID Modbus",
+          "variant": "Version"
+        },
+        "data_description": {
+          "host": "Le nom ou l'adresse IP de la passerelle RS485. Réglez-la en Modbus TCP vers RTU, 19200 bauds, parité paire, 1 bit de stop.",
+          "model": "La taille indiquée sur la plaque de la VMC. Elle fixe les plages de débit autorisées.",
+          "port": "Le port Modbus TCP de la passerelle, en général 502.",
+          "unit_id": "L'adresse Modbus de la VMC. Réglage d'usine : 1.",
+          "variant": "Les versions DHU et Sérénité régulent selon l'humidité ou la qualité d'air. Pas la version FL."
+        },
+        "title": "VMC derrière une passerelle Modbus TCP"
+      },
+      "user": {
+        "menu_options": {
+          "serial": "Port série (adaptateur USB RS485)",
+          "tcp": "Réseau (passerelle RS485 vers Modbus TCP)"
+        },
+        "title": "Comment la VMC est-elle raccordée ?"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "clp": {
+        "name": "Contact CLP"
+      },
+      "defrost": {
+        "name": "Dégivrage"
+      },
+      "exhaust_probe_fault": {
+        "name": "Sonde air rejeté"
+      },
+      "extract_probe_fault": {
+        "name": "Sonde air extrait"
+      },
+      "filter_alarm": {
+        "name": "Remplacement du filtre"
+      },
+      "motor_1_fault": {
+        "name": "Moteur 1"
+      },
+      "motor_2_fault": {
+        "name": "Moteur 2"
+      },
+      "outdoor_probe_fault": {
+        "name": "Sonde air extérieur"
+      },
+      "pre_exchanger_probe_fault": {
+        "name": "Sonde avant échangeur"
+      },
+      "supply_probe_fault": {
+        "name": "Sonde air soufflé"
+      }
+    },
+    "button": {
+      "reset_filter_alarm": {
+        "name": "Réinitialiser l'alarme filtre"
+      },
+      "start_boost": {
+        "name": "Démarrer le boost"
+      },
+      "stop_boost": {
+        "name": "Arrêter le boost"
+      }
+    },
+    "number": {
+      "bypass_indoor_minimum": {
+        "name": "Seuil intérieur du by-pass"
+      },
+      "bypass_outdoor_minimum": {
+        "name": "Seuil extérieur du by-pass"
+      },
+      "filter_interval": {
+        "name": "Intervalle de remplacement du filtre"
+      },
+      "flow_correction": {
+        "name": "Correction du débit"
+      },
+      "flow_offset": {
+        "name": "Décalage du débit"
+      },
+      "freecooling_flow": {
+        "name": "Débit freecooling"
+      },
+      "high_flow": {
+        "name": "Débit haut"
+      },
+      "low_flow": {
+        "name": "Débit bas"
+      },
+      "manual_bypass_duration": {
+        "name": "Durée du by-pass manuel"
+      },
+      "probe_maximum_flow": {
+        "name": "Sonde {probe} débit maximum"
+      },
+      "probe_maximum_level": {
+        "name": "Sonde {probe} seuil haut"
+      },
+      "probe_minimum_flow": {
+        "name": "Sonde {probe} débit minimum"
+      },
+      "probe_minimum_level": {
+        "name": "Sonde {probe} seuil bas"
+      },
+      "sensor_maximum_flow": {
+        "name": "Hygro débit maximum"
+      },
+      "sensor_maximum_level": {
+        "name": "Hygro seuil haut"
+      },
+      "sensor_minimum_flow": {
+        "name": "Hygro débit minimum"
+      },
+      "sensor_minimum_level": {
+        "name": "Hygro seuil bas"
+      }
+    },
+    "select": {
+      "auto_mode": {
+        "name": "Mode automatique",
+        "state": {
+          "agile": "Agile",
+          "proportional": "Proportionnel"
+        }
+      },
+      "clp_contact": {
+        "name": "Type de contact CLP",
+        "state": {
+          "normally_closed": "Normalement fermé",
+          "normally_open": "Normalement ouvert"
+        }
+      }
+    },
+    "sensor": {
+      "airflow": {
+        "name": "Débit"
+      },
+      "bypass_limit_switch": {
+        "name": "Fin de course du by-pass",
+        "state": {
+          "closed": "Fermé",
+          "no_signal": "Pas de signal",
+          "open": "Ouvert"
+        }
+      },
+      "control_panel": {
+        "name": "Commande",
+        "state": {
+          "none": "Aucune",
+          "radio": "Radio",
+          "wired": "Filaire"
+        }
+      },
+      "exhaust_temperature": {
+        "name": "Température air rejeté"
+      },
+      "extract_temperature": {
+        "name": "Température air extrait"
+      },
+      "operating_mode": {
+        "name": "Mode de fonctionnement",
+        "state": {
+          "agile": "Agile",
+          "bypass": "By-pass",
+          "clp": "Contact CLP",
+          "constant_speed": "Vitesse constante",
+          "defrost": "Dégivrage",
+          "proportional": "Proportionnel"
+        }
+      },
+      "outdoor_temperature": {
+        "name": "Température air extérieur"
+      },
+      "pre_exchanger_temperature": {
+        "name": "Température avant échangeur"
+      },
+      "preheater_state": {
+        "name": "Batterie de préchauffage",
+        "state": {
+          "active": "Active",
+          "alarm": "Alarme",
+          "stopped": "Arrêtée",
+          "waiting": "En attente"
+        }
+      },
+      "probe_co2": {
+        "name": "Sonde {probe} CO2"
+      },
+      "probe_humidity": {
+        "name": "Sonde {probe} humidité"
+      },
+      "probe_voc": {
+        "name": "Sonde {probe} COV"
+      },
+      "supply_temperature": {
+        "name": "Température air soufflé"
+      },
+      "voltage_input": {
+        "name": "Entrée 0-10 V"
+      }
+    },
+    "switch": {
+      "auto_bypass": {
+        "name": "By-pass automatique"
+      },
+      "defrost_allowed": {
+        "name": "Dégivrage autorisé"
+      },
+      "holiday_mode": {
+        "name": "Mode vacances"
+      },
+      "manual_bypass": {
+        "name": "By-pass manuel"
+      }
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "Impossible de joindre la VMC : {error}"
+    },
+    "invalid_value": {
+      "message": "La VMC n'accepte pas cette valeur : {error}"
+    },
+    "no_component_answered": {
+      "message": "La VMC a accepté la connexion mais n'a rien répondu."
+    },
+    "no_response": {
+      "message": "La VMC n'a pas répondu : {error}"
+    },
+    "write_failed": {
+      "message": "Échec de l'envoi de la commande à la VMC : {error}"
+    }
+  },
+  "selector": {
+    "model": {
+      "options": {
+        "225": "DOMEO EVO 225",
+        "315": "DOMEO EVO 315",
+        "450": "DOMEO EVO 450"
+      }
+    },
+    "parity": {
+      "options": {
+        "even": "Paire",
+        "none": "Aucune",
+        "odd": "Impaire"
+      }
+    },
+    "variant": {
+      "options": {
+        "dhu": "DHU (détection d'humidité)",
+        "fl": "FL (commande filaire)",
+        "serenite": "Sérénité (qualité d'air et humidité)"
+      }
+    }
+  }
+}

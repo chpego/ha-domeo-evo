@@ -1,0 +1,73 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "defrost": {
+        "default": "mdi:snowflake-melt"
+      },
+      "filter_alarm": {
+        "default": "mdi:air-filter"
+      }
+    },
+    "button": {
+      "reset_filter_alarm": {
+        "default": "mdi:air-filter"
+      },
+      "start_boost": {
+        "default": "mdi:fan-chevron-up"
+      },
+      "stop_boost": {
+        "default": "mdi:fan-chevron-down"
+      }
+    },
+    "number": {
+      "filter_interval": {
+        "default": "mdi:air-filter"
+      },
+      "freecooling_flow": {
+        "default": "mdi:fan"
+      },
+      "high_flow": {
+        "default": "mdi:fan-speed-3"
+      },
+      "low_flow": {
+        "default": "mdi:fan-speed-1"
+      },
+      "manual_bypass_duration": {
+        "default": "mdi:timer-outline"
+      }
+    },
+    "select": {
+      "auto_mode": {
+        "default": "mdi:fan-auto"
+      }
+    },
+    "sensor": {
+      "airflow": {
+        "default": "mdi:weather-windy"
+      },
+      "operating_mode": {
+        "default": "mdi:hvac"
+      },
+      "preheater_state": {
+        "default": "mdi:radiator"
+      }
+    },
+    "switch": {
+      "auto_bypass": {
+        "default": "mdi:valve"
+      },
+      "holiday_mode": {
+        "default": "mdi:bag-suitcase",
+        "state": {
+          "off": "mdi:bag-suitcase-off"
+        }
+      },
+      "manual_bypass": {
+        "default": "mdi:valve-open",
+        "state": {
+          "off": "mdi:valve-closed"
+        }
+      }
+    }
+  }
+}

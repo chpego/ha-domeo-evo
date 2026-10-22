@@ -1,0 +1,337 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "not_a_domeo_evo": "A device answers at this address, but it does not answer like a DOMEO EVO.",
+            "unit_silent": "The link is up, but the unit does not answer. Check that jumper JP1 is closed, and that the line settings (19200 baud, even parity, 1 stop bit by default) match the unit.",
+            "unknown": "Unexpected error"
+        },
+        "step": {
+            "reconfigure": {
+                "menu_options": {
+                    "reconfigure_serial": "Serial port (USB RS485 adapter)",
+                    "reconfigure_tcp": "Network (RS485 to Modbus TCP gateway)"
+                },
+                "title": "How is the unit connected now?"
+            },
+            "reconfigure_serial": {
+                "data": {
+                    "baudrate": "Baud rate",
+                    "device": "Device",
+                    "model": "Model",
+                    "parity": "Parity",
+                    "unit_id": "Unit ID",
+                    "variant": "Variant"
+                },
+                "data_description": {
+                    "baudrate": "The line speed of the unit. The factory setting is 19200.",
+                    "device": "The RS485 adapter the unit is wired to.",
+                    "model": "The airflow class on the unit's rating plate. It sets the airflow ranges you can choose.",
+                    "parity": "The parity of the unit. The factory setting is even.",
+                    "unit_id": "The Modbus address of the unit. The factory setting is 1.",
+                    "variant": "DHU and S\u00e9r\u00e9nit\u00e9 units regulate on humidity or air quality. FL units do not."
+                },
+                "title": "Unit on a serial port"
+            },
+            "reconfigure_tcp": {
+                "data": {
+                    "host": "Host",
+                    "model": "Model",
+                    "port": "Port",
+                    "unit_id": "Unit ID",
+                    "variant": "Variant"
+                },
+                "data_description": {
+                    "host": "The hostname or IP address of the RS485 gateway. Set the gateway to Modbus TCP to RTU, 19200 baud, even parity, 1 stop bit.",
+                    "model": "The airflow class on the unit's rating plate. It sets the airflow ranges you can choose.",
+                    "port": "The Modbus TCP port of the gateway, usually 502.",
+                    "unit_id": "The Modbus address of the unit. The factory setting is 1.",
+                    "variant": "DHU and S\u00e9r\u00e9nit\u00e9 units regulate on humidity or air quality. FL units do not."
+                },
+                "title": "Unit behind a Modbus TCP gateway"
+            },
+            "serial": {
+                "data": {
+                    "baudrate": "Baud rate",
+                    "device": "Device",
+                    "model": "Model",
+                    "parity": "Parity",
+                    "unit_id": "Unit ID",
+                    "variant": "Variant"
+                },
+                "data_description": {
+                    "baudrate": "The line speed of the unit. The factory setting is 19200.",
+                    "device": "The RS485 adapter the unit is wired to.",
+                    "model": "The airflow class on the unit's rating plate. It sets the airflow ranges you can choose.",
+                    "parity": "The parity of the unit. The factory setting is even.",
+                    "unit_id": "The Modbus address of the unit. The factory setting is 1.",
+                    "variant": "DHU and S\u00e9r\u00e9nit\u00e9 units regulate on humidity or air quality. FL units do not."
+                },
+                "title": "Unit on a serial port"
+            },
+            "tcp": {
+                "data": {
+                    "host": "Host",
+                    "model": "Model",
+                    "port": "Port",
+                    "unit_id": "Unit ID",
+                    "variant": "Variant"
+                },
+                "data_description": {
+                    "host": "The hostname or IP address of the RS485 gateway. Set the gateway to Modbus TCP to RTU, 19200 baud, even parity, 1 stop bit.",
+                    "model": "The airflow class on the unit's rating plate. It sets the airflow ranges you can choose.",
+                    "port": "The Modbus TCP port of the gateway, usually 502.",
+                    "unit_id": "The Modbus address of the unit. The factory setting is 1.",
+                    "variant": "DHU and S\u00e9r\u00e9nit\u00e9 units regulate on humidity or air quality. FL units do not."
+                },
+                "title": "Unit behind a Modbus TCP gateway"
+            },
+            "user": {
+                "menu_options": {
+                    "serial": "Serial port (USB RS485 adapter)",
+                    "tcp": "Network (RS485 to Modbus TCP gateway)"
+                },
+                "title": "How is the unit connected?"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "clp": {
+                "name": "CLP contact"
+            },
+            "defrost": {
+                "name": "Defrost"
+            },
+            "exhaust_probe_fault": {
+                "name": "Exhaust air probe"
+            },
+            "extract_probe_fault": {
+                "name": "Extract air probe"
+            },
+            "filter_alarm": {
+                "name": "Filter replacement"
+            },
+            "motor_1_fault": {
+                "name": "Motor 1"
+            },
+            "motor_2_fault": {
+                "name": "Motor 2"
+            },
+            "outdoor_probe_fault": {
+                "name": "Outdoor air probe"
+            },
+            "pre_exchanger_probe_fault": {
+                "name": "Pre-exchanger probe"
+            },
+            "supply_probe_fault": {
+                "name": "Supply air probe"
+            }
+        },
+        "button": {
+            "reset_filter_alarm": {
+                "name": "Reset filter alarm"
+            },
+            "start_boost": {
+                "name": "Start boost"
+            },
+            "stop_boost": {
+                "name": "Stop boost"
+            }
+        },
+        "number": {
+            "bypass_indoor_minimum": {
+                "name": "Bypass indoor temperature threshold"
+            },
+            "bypass_outdoor_minimum": {
+                "name": "Bypass outdoor temperature threshold"
+            },
+            "filter_interval": {
+                "name": "Filter replacement interval"
+            },
+            "flow_correction": {
+                "name": "Airflow correction"
+            },
+            "flow_offset": {
+                "name": "Airflow offset"
+            },
+            "freecooling_flow": {
+                "name": "Freecooling airflow"
+            },
+            "high_flow": {
+                "name": "High airflow"
+            },
+            "low_flow": {
+                "name": "Low airflow"
+            },
+            "manual_bypass_duration": {
+                "name": "Manual bypass duration"
+            },
+            "probe_maximum_flow": {
+                "name": "Probe {probe} maximum airflow"
+            },
+            "probe_maximum_level": {
+                "name": "Probe {probe} upper threshold"
+            },
+            "probe_minimum_flow": {
+                "name": "Probe {probe} minimum airflow"
+            },
+            "probe_minimum_level": {
+                "name": "Probe {probe} lower threshold"
+            },
+            "sensor_maximum_flow": {
+                "name": "Humidity maximum airflow"
+            },
+            "sensor_maximum_level": {
+                "name": "Humidity upper threshold"
+            },
+            "sensor_minimum_flow": {
+                "name": "Humidity minimum airflow"
+            },
+            "sensor_minimum_level": {
+                "name": "Humidity lower threshold"
+            }
+        },
+        "select": {
+            "auto_mode": {
+                "name": "Automatic mode",
+                "state": {
+                    "agile": "Agile",
+                    "proportional": "Proportional"
+                }
+            },
+            "clp_contact": {
+                "name": "CLP contact type",
+                "state": {
+                    "normally_closed": "Normally closed",
+                    "normally_open": "Normally open"
+                }
+            }
+        },
+        "sensor": {
+            "airflow": {
+                "name": "Airflow"
+            },
+            "bypass_limit_switch": {
+                "name": "Bypass limit switch",
+                "state": {
+                    "closed": "Closed",
+                    "no_signal": "No signal",
+                    "open": "Open"
+                }
+            },
+            "control_panel": {
+                "name": "Control panel",
+                "state": {
+                    "none": "None",
+                    "radio": "Radio",
+                    "wired": "Wired"
+                }
+            },
+            "exhaust_temperature": {
+                "name": "Exhaust air temperature"
+            },
+            "extract_temperature": {
+                "name": "Extract air temperature"
+            },
+            "operating_mode": {
+                "name": "Operating mode",
+                "state": {
+                    "agile": "Agile",
+                    "bypass": "Bypass",
+                    "clp": "CLP contact",
+                    "constant_speed": "Constant speed",
+                    "defrost": "Defrost",
+                    "proportional": "Proportional"
+                }
+            },
+            "outdoor_temperature": {
+                "name": "Outdoor air temperature"
+            },
+            "pre_exchanger_temperature": {
+                "name": "Pre-exchanger temperature"
+            },
+            "preheater_state": {
+                "name": "Preheater",
+                "state": {
+                    "active": "Active",
+                    "alarm": "Alarm",
+                    "stopped": "Stopped",
+                    "waiting": "Waiting"
+                }
+            },
+            "probe_co2": {
+                "name": "Probe {probe} carbon dioxide"
+            },
+            "probe_humidity": {
+                "name": "Probe {probe} humidity"
+            },
+            "probe_voc": {
+                "name": "Probe {probe} volatile organic compounds"
+            },
+            "supply_temperature": {
+                "name": "Supply air temperature"
+            },
+            "voltage_input": {
+                "name": "0-10 V input"
+            }
+        },
+        "switch": {
+            "auto_bypass": {
+                "name": "Automatic bypass"
+            },
+            "defrost_allowed": {
+                "name": "Defrost allowed"
+            },
+            "holiday_mode": {
+                "name": "Holiday mode"
+            },
+            "manual_bypass": {
+                "name": "Manual bypass"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Failed to reach the unit: {error}"
+        },
+        "invalid_value": {
+            "message": "The unit does not accept this value: {error}"
+        },
+        "no_component_answered": {
+            "message": "The unit accepted the connection but answered nothing."
+        },
+        "no_response": {
+            "message": "The unit did not answer: {error}"
+        },
+        "write_failed": {
+            "message": "Failed to send the command to the unit: {error}"
+        }
+    },
+    "selector": {
+        "model": {
+            "options": {
+                "225": "DOMEO EVO 225",
+                "315": "DOMEO EVO 315",
+                "450": "DOMEO EVO 450"
+            }
+        },
+        "parity": {
+            "options": {
+                "even": "Even",
+                "none": "None",
+                "odd": "Odd"
+            }
+        },
+        "variant": {
+            "options": {
+                "dhu": "DHU (humidity detection)",
+                "fl": "FL (wired control)",
+                "serenite": "S\u00e9r\u00e9nit\u00e9 (air quality and humidity)"
+            }
+        }
+    }
+}
