@@ -12,15 +12,15 @@
     "modbus",
     "usb"
   ],
-  "documentation": "https://github.com/xtozez/ha-domeo-evo",
+  "documentation": "https://github.com/chpego/ha-domeo-evo",
   "integration_type": "device",
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/chpego/ha-domeo-evo/issues",
   "loggers": [
     "domeo_evo_modbus",
     "modbus_connection",
     "tmodbus"
   ],
   "requirements": [],
-  "issue_tracker": "https://github.com/xtozez/ha-domeo-evo/issues",
-  "version": "0.1.0"
+  "version": "0.2.0-beta.1"
 }

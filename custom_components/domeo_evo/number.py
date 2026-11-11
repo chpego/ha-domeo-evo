@@ -4,8 +4,6 @@ from collections.abc import Awaitable, Callable, Iterable
 from dataclasses import dataclass
 from typing import Literal, override
 
-from .domeo_evo_modbus import DomeoEvo, Source
-
 from homeassistant.components.number import (
     NumberDeviceClass,
     NumberEntity,
@@ -23,6 +21,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import DomeoEvoConfigEntry, DomeoEvoRuntimeData
+from .domeo_evo_modbus import DomeoEvo, Source
 from .entity import DomeoEvoEntity, DomeoEvoEntityDescription
 
 PARALLEL_UPDATES = 1

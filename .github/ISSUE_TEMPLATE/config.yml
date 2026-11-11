@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or help with wiring (French)
+    url: https://forum.hacf.fr/t/vmc-s-p-domeo-evo-225-fl-via-modbus-tcp-rtu/69801
+    about: The HACF forum thread about the DOMEO EVO over Modbus.

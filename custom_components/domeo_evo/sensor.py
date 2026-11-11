@@ -5,15 +5,6 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import override
 
-from .domeo_evo_modbus import (
-    AirSensType,
-    ControlPanel,
-    DomeoEvo,
-    LimitSwitchState,
-    OperatingMode,
-    PreheaterState,
-)
-
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -32,6 +23,14 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import DomeoEvoConfigEntry
+from .domeo_evo_modbus import (
+    AirSensType,
+    ControlPanel,
+    DomeoEvo,
+    LimitSwitchState,
+    OperatingMode,
+    PreheaterState,
+)
 from .entity import DomeoEvoEntity, DomeoEvoEntityDescription
 
 PARALLEL_UPDATES = 0
@@ -110,8 +109,13 @@ SENSORS: tuple[DomeoEvoSensorEntityDescription, ...] = (
     _temperature("supply_temperature", lambda d: d.readings.supply_temperature),
     _temperature(
         "pre_exchanger_temperature",
-        lambda d: d.readings.pre_exchanger_temperature,
-        # Not every unit has this probe; those without it report a fault.
+        # Not every unit has this probe. One without it flags a fault and
+        # reads a meaningless value (-30.0 °C on a real 225 FL).
+        lambda d: (
+            None
+            if d.status.pre_exchanger_probe_fault
+            else d.readings.pre_exchanger_temperature
+        ),
         enabled_default=False,
     ),
     DomeoEvoSensorEntityDescription(

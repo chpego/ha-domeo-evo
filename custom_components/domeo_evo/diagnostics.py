@@ -2,11 +2,10 @@
 
 from typing import Any
 
-from modbus_connection import ModbusError
-
 from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant
+from modbus_connection import ModbusError
 
 from .coordinator import DomeoEvoConfigEntry
 

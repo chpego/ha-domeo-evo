@@ -6,16 +6,16 @@ from datetime import timedelta
 import logging
 from typing import override
 
-from .domeo_evo_modbus import READINGS, DomeoEvo, UpdateReport
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers import issue_registry as ir
+from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from modbus_connection import ModbusError, ModbusTimeoutError
 from propcache.api import cached_property
 
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-
 from .const import DOMAIN, MANUFACTURER, TIMEOUTS_BEFORE_RECONNECT
+from .domeo_evo_modbus import READINGS, DomeoEvo, UpdateReport
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -87,7 +87,30 @@ class DomeoEvoCoordinator(DataUpdateCoordinator[UpdateReport]):
                 "every component failed to refresh", list(report.failed.values())
             )
         self._log_component_changes(report)
+        if "status" in report.updated:
+            self._update_modbus_control_issue()
         return report
+
+    def _update_modbus_control_issue(self) -> None:
+        """Raise a repair while jumper JP1 is open, and clear it once closed.
+
+        With JP1 open the unit answers reads, so everything looks fine until
+        a command fails.
+        """
+        issue_id = modbus_control_issue_id(self.config_entry)
+        # Only called right after the status was read, so this is never None.
+        if self.device.status.modbus_control is False:
+            ir.async_create_issue(
+                self.hass,
+                DOMAIN,
+                issue_id,
+                is_fixable=False,
+                severity=ir.IssueSeverity.WARNING,
+                translation_key="modbus_control_off",
+                translation_placeholders={"name": self.config_entry.title},
+            )
+        else:
+            ir.async_delete_issue(self.hass, DOMAIN, issue_id)
 
     async def _async_count_timeout(self) -> None:
         """Drop a link that stays open while the unit behind it is silent."""
@@ -113,6 +136,11 @@ class DomeoEvoCoordinator(DataUpdateCoordinator[UpdateReport]):
         for name in report.updated & self._failing:
             self._failing.discard(name)
             _LOGGER.info("%s: %s is available again", self.name, name)
+
+
+def modbus_control_issue_id(entry: ConfigEntry) -> str:
+    """The repair raised while the unit of this entry ignores Modbus."""
+    return f"modbus_control_off_{entry.entry_id}"
 
 
 @dataclass

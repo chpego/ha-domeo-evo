@@ -1,0 +1,55 @@
+name: Bug report
+description: Something does not work with your DOMEO EVO.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before you report: check that jumper **JP1** is closed on the unit's board
+        (the **Modbus control (JP1)** entity should be on), and that the gateway is set
+        to **19200 baud, 8 data bits, even parity, 1 stop bit**.
+  - type: input
+    id: unit
+    attributes:
+      label: Unit
+      description: Model and variant from the rating plate, and the control panel.
+      placeholder: DOMEO EVO 225 FL, radio panel (RD)
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Gateway or adapter
+      placeholder: Waveshare RS485 TO POE ETH (B), Elfin EW11, USB RS485 adapter…
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Home Assistant version and integration version.
+      placeholder: Home Assistant 2026.11.1, integration 0.2.0
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happens, and what you expected
+      description: For a command, say what the unit did (airflow, control panel display).
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: |
+        On the integration's card: ⋮ → Download diagnostics. Drag the file here
+        (if GitHub refuses it, zip it first). The gateway address is redacted.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Lines from Settings → System → Logs that mention domeo_evo, if any.
+      render: text

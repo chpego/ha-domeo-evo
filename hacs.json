@@ -1,5 +1,7 @@
 {
   "name": "S&P DOMEO EVO",
   "homeassistant": "2026.10.2",
-  "render_readme": true
+  "render_readme": true,
+  "zip_release": true,
+  "filename": "domeo_evo.zip"
 }

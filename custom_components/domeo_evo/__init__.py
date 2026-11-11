@@ -1,13 +1,24 @@
 """Integrate S&P DOMEO EVO ventilation units into Home Assistant."""
 
-from .domeo_evo_modbus import DomeoEvo, Model, Variant
-
 from homeassistant.components.modbus import async_get_unit
 from homeassistant.const import CONF_MODEL, Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import issue_registry as ir
 
-from .const import CONF_UNIT_ID, CONF_VARIANT, READINGS_INTERVAL, SETTINGS_INTERVAL
-from .coordinator import DomeoEvoConfigEntry, DomeoEvoCoordinator, DomeoEvoRuntimeData
+from .const import (
+    CONF_UNIT_ID,
+    CONF_VARIANT,
+    DOMAIN,
+    READINGS_INTERVAL,
+    SETTINGS_INTERVAL,
+)
+from .coordinator import (
+    DomeoEvoConfigEntry,
+    DomeoEvoCoordinator,
+    DomeoEvoRuntimeData,
+    modbus_control_issue_id,
+)
+from .domeo_evo_modbus import DomeoEvo, Model, Variant
 from .helpers import create_modbus_params
 
 PLATFORMS: list[Platform] = [
@@ -52,4 +63,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: DomeoEvoConfigEntry) -> 
 
 async def async_unload_entry(hass: HomeAssistant, entry: DomeoEvoConfigEntry) -> bool:
     """Unload a config entry."""
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    unloaded = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    if unloaded:
+        ir.async_delete_issue(hass, DOMAIN, modbus_control_issue_id(entry))
+    return unloaded

@@ -1,0 +1,39 @@
+name: Release
+
+# Attaches a ZIP of custom_components/domeo_evo/ to every GitHub release,
+# matching zip_release and filename in hacs.json. The Marketplace installs
+# that asset instead of the repository source.
+
+on:
+  release:
+    types:
+      - published
+
+permissions: {}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the tag matches the manifest version
+        run: |
+          version="$(python3 -c 'import json; print(json.load(open("custom_components/domeo_evo/manifest.json"))["version"])')"
+          if [ "$version" != "${{ github.event.release.tag_name }}" ]; then
+            echo "Tag ${{ github.event.release.tag_name }} does not match manifest version $version" >&2
+            exit 1
+          fi
+
+      - name: ZIP the integration folder
+        run: |
+          cd custom_components/domeo_evo
+          zip -r ../../domeo_evo.zip . -x '__pycache__/*' '*/__pycache__/*'
+
+      - name: Upload the ZIP to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: domeo_evo.zip

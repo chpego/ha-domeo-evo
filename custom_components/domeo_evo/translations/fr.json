@@ -115,6 +115,9 @@
       "filter_alarm": {
         "name": "Remplacement du filtre"
       },
+      "modbus_control": {
+        "name": "Pilotage Modbus (JP1)"
+      },
       "motor_1_fault": {
         "name": "Moteur 1"
       },
@@ -309,6 +312,15 @@
     },
     "write_failed": {
       "message": "Échec de l'envoi de la commande à la VMC : {error}"
+    },
+    "write_refused": {
+      "message": "La VMC a refusé la commande ({error}). Vérifiez que le cavalier JP1 de sa carte est fermé : tant que JP1 est ouvert, la VMC répond aux lectures mais n'obéit qu'à sa télécommande."
+    }
+  },
+  "issues": {
+    "modbus_control_off": {
+      "description": "{name} indique qu'elle est pilotée par sa télécommande et non par Modbus : le cavalier JP1 de sa carte est ouvert. Les lectures fonctionnent, mais toutes les commandes (boost, mode vacances, by-pass, réglages) sont refusées.\n\nPour corriger, coupez l'alimentation de la VMC, retirez la face avant et fermez le cavalier JP1. Une fois JP1 fermé, la VMC ignore sa télécommande et c'est Home Assistant qui la pilote. Cet avertissement disparaît de lui-même à la lecture suivante.",
+      "title": "{name} : le cavalier JP1 est ouvert"
     }
   },
   "selector": {
@@ -329,7 +341,7 @@
     "variant": {
       "options": {
         "dhu": "DHU (détection d'humidité)",
-        "fl": "FL (commande filaire)",
+        "fl": "FL ou RD (sans régulation hygro)",
         "serenite": "Sérénité (qualité d'air et humidité)"
       }
     }

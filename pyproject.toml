@@ -1,0 +1,60 @@
+# Tooling only: this repository ships a Home Assistant custom integration, not
+# a Python package.
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["custom_components/domeo_evo"]
+omit = ["custom_components/domeo_evo/domeo_evo_modbus/*"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 100
+
+[tool.ruff]
+target-version = "py314"
+extend-exclude = [
+  # Vendored: linted in its own repository.
+  "custom_components/domeo_evo/domeo_evo_modbus",
+  "tests/register_images.py",
+]
+
+[tool.ruff.lint]
+select = ["B", "D", "E", "F", "I", "PIE", "PL", "RUF", "SIM", "UP", "W"]
+ignore = [
+  "D202",
+  "D203",
+  "D213",
+  "D401",
+  "E501",
+  "PLR0913",
+  "PLR0917",
+  "PLR2004",
+]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+known-first-party = ["custom_components"]
+combine-as-imports = true
+split-on-trailing-comma = false
+
+[tool.mypy]
+python_version = "3.14"
+# Core's settings (mypy.ini), which allow implicit re-exports.
+check_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_ignores = true
+files = ["custom_components/domeo_evo"]
+exclude = ["custom_components/domeo_evo/domeo_evo_modbus/"]
+follow_imports = "silent"

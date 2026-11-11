@@ -4,11 +4,10 @@ from collections.abc import Awaitable
 from dataclasses import dataclass
 from typing import override
 
-from modbus_connection import ModbusError
-
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from modbus_connection import IllegalFunctionError, ModbusError
 
 from .const import DOMAIN
 from .coordinator import DomeoEvoCoordinator, DomeoEvoRuntimeData
@@ -62,6 +61,13 @@ class DomeoEvoEntity(CoordinatorEntity[DomeoEvoCoordinator]):
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
                 translation_key="invalid_value",
+                translation_placeholders={"error": str(err)},
+            ) from err
+        except IllegalFunctionError as err:
+            # What a unit with jumper JP1 open answers to every write.
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="write_refused",
                 translation_placeholders={"error": str(err)},
             ) from err
         except ModbusError as err:

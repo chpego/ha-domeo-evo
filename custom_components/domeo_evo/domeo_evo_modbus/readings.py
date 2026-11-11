@@ -19,10 +19,18 @@ from .enums import (
 # The integrated humidity sensor reads this when it is not fitted.
 HUMIDITY_SENSOR_ABSENT = 54
 
+# The highest firmware version the table documents (xx.x, times ten).
+_MAX_VERSION = 999
+
 
 def _version(raw: int | None) -> str | None:
-    """Format a firmware version, sent as ``xx.x`` times ten."""
-    if raw is None:
+    """Format a firmware version, sent as ``xx.x`` times ten.
+
+    The table documents 0 to 999. A real 225 FL RD reported 0 for its main
+    board and 65535 for its radio panel: neither is a version, so anything
+    outside 1 to 999 reads as unknown.
+    """
+    if raw is None or not 1 <= raw <= _MAX_VERSION:
         return None
     return f"{raw // 10}.{raw % 10}"
 

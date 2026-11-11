@@ -5,14 +5,13 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import override
 
-from .domeo_evo_modbus import AutoMode, ClpContact, DomeoEvo
-
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import DomeoEvoConfigEntry
+from .domeo_evo_modbus import AutoMode, ClpContact, DomeoEvo
 from .entity import DomeoEvoEntity, DomeoEvoEntityDescription
 
 PARALLEL_UPDATES = 1

@@ -4,8 +4,6 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import override
 
-from .domeo_evo_modbus import DomeoEvo
-
 from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
     BinarySensorEntity,
@@ -16,6 +14,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import DomeoEvoConfigEntry
+from .domeo_evo_modbus import DomeoEvo
 from .entity import DomeoEvoEntity, DomeoEvoEntityDescription
 
 PARALLEL_UPDATES = 0
@@ -75,6 +74,15 @@ BINARY_SENSORS: tuple[DomeoEvoBinarySensorEntityDescription, ...] = (
         device_class=BinarySensorDeviceClass.PROBLEM,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda device: device.status.motor_2_fault,
+    ),
+    DomeoEvoBinarySensorEntityDescription(
+        # Jumper JP1: closed, the unit takes orders over Modbus; open, it
+        # still answers reads but refuses every write.
+        key="modbus_control",
+        translation_key="modbus_control",
+        component="status",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda device: device.status.modbus_control,
     ),
     DomeoEvoBinarySensorEntityDescription(
         key="clp",

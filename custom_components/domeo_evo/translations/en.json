@@ -115,6 +115,9 @@
             "filter_alarm": {
                 "name": "Filter replacement"
             },
+            "modbus_control": {
+                "name": "Modbus control (JP1)"
+            },
             "motor_1_fault": {
                 "name": "Motor 1"
             },
@@ -309,6 +312,15 @@
         },
         "write_failed": {
             "message": "Failed to send the command to the unit: {error}"
+        },
+        "write_refused": {
+            "message": "The unit refused the command ({error}). Check that jumper JP1 on its board is closed: while JP1 is open, the unit answers readings but only takes orders from its control panel."
+        }
+    },
+    "issues": {
+        "modbus_control_off": {
+            "description": "{name} reports that it is controlled by its control panel, not over Modbus: jumper JP1 on its board is open. Readings work, but every command (boost, holiday mode, bypass, settings) is refused.\n\nTo fix it, cut the power to the unit, remove its front panel and close jumper JP1. Once JP1 is closed the unit ignores its control panel, and Home Assistant controls it. This warning clears itself at the next reading after JP1 is closed.",
+            "title": "{name}: jumper JP1 is open"
         }
     },
     "selector": {
@@ -329,7 +341,7 @@
         "variant": {
             "options": {
                 "dhu": "DHU (humidity detection)",
-                "fl": "FL (wired control)",
+                "fl": "FL or RD (no humidity regulation)",
                 "serenite": "S\u00e9r\u00e9nit\u00e9 (air quality and humidity)"
             }
         }
