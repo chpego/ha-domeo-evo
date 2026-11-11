@@ -1,0 +1,39 @@
+name: Stale
+
+# Issues waiting for a test on a real unit can take weeks: label them
+# "needs-hardware" to keep them open.
+
+on:
+  schedule:
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-stale: 60
+          days-before-close: 14
+          stale-issue-label: stale
+          stale-pr-label: stale
+          exempt-issue-labels: "enhancement,needs-hardware,pinned"
+          exempt-pr-labels: "needs-hardware,pinned"
+          stale-issue-message: >
+            This issue has had no activity for 60 days. Is it still a problem
+            with the latest version of the integration and of Home Assistant?
+            Reply here to keep it open; otherwise it closes in 14 days.
+
+            Ce ticket est sans activité depuis 60 jours. Le problème existe-t-il
+            toujours avec la dernière version ? Répondez pour le garder ouvert ;
+            sinon il sera fermé dans 14 jours.
+          stale-pr-message: >
+            This pull request has had no activity for 60 days. It closes in 14
+            days unless there is new activity.
