@@ -2,7 +2,20 @@ name: Tests
 
 on:
   push:
+    paths:
+      - "custom_components/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "requirements_test.txt"
+      - ".github/workflows/tests.yml"
   pull_request:
+    paths:
+      - "custom_components/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "requirements_test.txt"
+      - ".github/workflows/tests.yml"
+  workflow_dispatch:
 
 permissions: {}
 

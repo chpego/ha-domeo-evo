@@ -2,7 +2,17 @@ name: HACS Action
 
 on:
   push:
+    paths:
+      - "custom_components/**"
+      - "hacs.json"
+      - "README.md"
+      - ".github/workflows/hacs.yml"
   pull_request:
+    paths:
+      - "custom_components/**"
+      - "hacs.json"
+      - "README.md"
+      - ".github/workflows/hacs.yml"
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
