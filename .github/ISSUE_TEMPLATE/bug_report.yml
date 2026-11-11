@@ -1,5 +1,6 @@
 name: Bug report
 description: Something does not work with your DOMEO EVO.
+title: "[Bug] "
 labels: [bug]
 body:
   - type: markdown
@@ -8,12 +9,37 @@ body:
         Before you report: check that jumper **JP1** is closed on the unit's board
         (the **Modbus control (JP1)** entity should be on), and that the gateway is set
         to **19200 baud, 8 data bits, even parity, 1 stop bit**.
-  - type: input
-    id: unit
+
+        Avant de signaler un problème : vérifiez que le cavalier **JP1** est fermé et que la
+        passerelle est en **19200 bauds, 8 bits, parité paire, 1 bit de stop**. Vous pouvez
+        écrire en français.
+  - type: checkboxes
+    id: existing-issue
     attributes:
-      label: Unit
-      description: Model and variant from the rating plate, and the control panel.
-      placeholder: DOMEO EVO 225 FL, radio panel (RD)
+      label: Existing issues
+      options:
+        - label: I searched the open and closed issues and found none for this problem
+          required: true
+  - type: dropdown
+    id: model
+    attributes:
+      label: Model
+      options:
+        - "225"
+        - "315"
+        - "450"
+    validations:
+      required: true
+  - type: dropdown
+    id: variant
+    attributes:
+      label: Variant
+      options:
+        - FL (wired control panel)
+        - RD (radio control panel)
+        - DHU
+        - Sérénité
+        - Not sure
     validations:
       required: true
   - type: input
@@ -24,11 +50,19 @@ body:
     validations:
       required: true
   - type: input
-    id: versions
+    id: ha-version
     attributes:
-      label: Versions
-      description: Home Assistant version and integration version.
-      placeholder: Home Assistant 2026.11.1, integration 0.2.0
+      label: Home Assistant version
+      description: Settings → About
+      placeholder: "2026.11.1"
+    validations:
+      required: true
+  - type: input
+    id: integration-version
+    attributes:
+      label: Integration version
+      description: Settings → Marketplace → S&P DOMEO EVO
+      placeholder: 0.2.0-beta.1
     validations:
       required: true
   - type: textarea
@@ -51,5 +85,5 @@ body:
     id: logs
     attributes:
       label: Logs
-      description: Lines from Settings → System → Logs that mention domeo_evo, if any.
+      description: Lines from Settings → System → Logs that mention domeo_evo, if any. See "Debug logs" in the README.
       render: text

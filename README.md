@@ -2,16 +2,59 @@
 
 <img src="https://raw.githubusercontent.com/chpego/ha-domeo-evo/main/custom_components/domeo_evo/brand/icon.png" alt="" width="96" align="right">
 
-Read and control an **S&P DOMEO EVO** heat recovery ventilation unit (225, 315, 450; FL, RD, DHU, Sérénité) from Home Assistant, over its Modbus RTU port.
+- Read and control an **S&P DOMEO EVO** heat recovery ventilation unit (225, 315, 450; FL, RD, DHU, Sérénité) from Home Assistant, over its Modbus RTU port.
+- Fully local: through an RS485 to Modbus TCP gateway or a USB RS485 adapter. No cloud, no account.
+- Set up from the UI, in English or French.
 
-- **Local.** Through an RS485 to Modbus TCP gateway or a USB RS485 adapter. No cloud, no account.
-- **Set up from the UI.** Pick the link, the model and the variant.
-- **Safe by design.** It never writes the unit's own address, speed or parity, and it writes nothing until you use a command.
+[![Release][release-shield]][release]
+[![Downloads][downloads-shield]][release]
+[![License][license-shield]](LICENSE)
+[![Tests][tests-shield]][tests]
+[![Hassfest][hassfest-shield]][hassfest]
+[![Repository validation][validation-shield]][validation]
 
 [Version française](README_fr.md)
 
 > [!NOTE]
 > This integration is in **beta**. The register map follows the official S&P table, and the first real units are being tested on the [HACF forum](https://forum.hacf.fr/t/vmc-s-p-domeo-evo-225-fl-via-modbus-tcp-rtu/69801). See [Known limitations](#known-limitations).
+
+## Contents
+
+- [Features](#features)
+- [Supported units](#supported-units)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Setup](#setup)
+- [Data updates](#data-updates)
+- [Entities](#entities)
+- [What the integration writes](#what-the-integration-writes)
+- [Automation example](#automation-example)
+- [Known limitations](#known-limitations)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [Related projects](#related-projects)
+- [Disclaimer and license](#disclaimer-and-license)
+
+## Features
+
+- **Local.** Nothing leaves your network.
+- **Set up from the UI.** Pick the link (network gateway or serial port), the model and the variant.
+- **Airflows within the unit's limits.** Low, high and freecooling airflows are bounded by the range of your model.
+- **AIRSENS probes found automatically.** One sensor per connected humidity, CO₂ or VOC probe.
+- **Tells you about jumper JP1.** A diagnostic entity and a repair warn you when the unit ignores Modbus commands.
+- **Safe for the link.** It never writes the unit's own address, speed or parity.
+- **Diagnostics.** One-click download with the raw register map, the gateway address redacted.
+- **Translated.** English and French.
+
+## Supported units
+
+| Unit | Status | Evidence |
+| --- | --- | --- |
+| **DOMEO EVO 225 FL / RD** | Readings confirmed | A real 225 FL RD ([HACF forum](https://forum.hacf.fr/t/vmc-s-p-domeo-evo-225-fl-via-modbus-tcp-rtu/69801/25)). Commands are being tested. |
+| DOMEO EVO 315, 450 | Expected to work | Same register table; airflow ranges per model from the S&P table |
+| DHU, Sérénité variants | Expected to work | Humidity regulation and AIRSENS probes follow the S&P table, tested on a simulator |
+
+Have one of these units? A test report with your diagnostics file is very welcome: [open an issue](https://github.com/chpego/ha-domeo-evo/issues).
 
 ## Prerequisites
 
@@ -24,11 +67,19 @@ Read and control an **S&P DOMEO EVO** heat recovery ventilation unit (225, 315, 
 
 ## Installation
 
-[![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=chpego&repository=ha-domeo-evo&category=integration)
+### Marketplace
 
-Or add it by hand: **Marketplace → ⋮ → Custom repositories**, add `https://github.com/chpego/ha-domeo-evo` with the type **Integration**, then download **S&P DOMEO EVO**. To get the betas, turn on the repository's **Pre-release** switch.
+[![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=chpego&repository=ha-domeo-evo)
 
-Without the Marketplace, copy `custom_components/domeo_evo` into your `config/custom_components/` folder and restart Home Assistant.
+Or add it by hand: **Settings → Marketplace → ⋮ → Custom repositories**, add `https://github.com/chpego/ha-domeo-evo` with the type **Integration**, then download **S&P DOMEO EVO**.
+
+### Pre-release versions
+
+Betas are published as GitHub pre-releases. To get them, open this repository in the Marketplace and turn on its **Pre-release** switch.
+
+### Manually
+
+Copy `custom_components/domeo_evo` into your `config/custom_components/` folder and restart Home Assistant.
 
 ## Setup
 
@@ -41,13 +92,22 @@ Or go to **Settings → Devices & services → Add integration → S&P DOMEO EVO
 3. Leave the unit ID at **1** unless you changed it.
 4. Pick the **model** from the rating plate (225, 315 or 450) and the **variant**. The unit does not report either, and they set the airflow ranges and the humidity settings.
 
-If you also have a YAML `modbus:` configuration for this unit, turn it off, or make sure your gateway accepts several clients (Waveshare: **multi-host**).
+To change the gateway address or the link later, use **Reconfigure** on the integration. The unit reports no serial number, so adding it again would create a second device.
+
+## Data updates
+
+- **Readings** (airflow, temperatures, operating mode, alarms, switches, probes): every 30 seconds.
+- **Settings** (airflows, thresholds, intervals): every 5 minutes, and right after you change one.
+- **Partial failures:** each part of the unit is read separately. If one part does not answer, only its entities go unavailable.
+- **Silent gateway:** after three readings in a row time out, the link is reopened. Some gateways keep the connection open while the unit behind them is silent.
+
+Home Assistant shares one connection per gateway and sends one request at a time. If another program (a YAML `modbus:` configuration, Node-RED…) talks to the same gateway, turn it off or enable the gateway's **multi-host** mode.
 
 ## Entities
 
 | Kind | Entities |
 | --- | --- |
-| Sensors | Airflow, operating mode, the five air temperatures, preheater, control panel, 0-10 V input; integrated humidity (DHU, Sérénité); one sensor per AIRSENS probe (humidity, CO₂ or VOC), found automatically |
+| Sensors | Airflow, operating mode, the five air temperatures, preheater, control panel, 0-10 V input; integrated humidity (DHU, Sérénité); one sensor per AIRSENS probe (humidity, CO₂ or VOC) |
 | Binary sensors | Filter replacement, defrost, motor faults, temperature probe faults, CLP contact, **Modbus control (JP1)** |
 | Switches | Holiday mode, manual bypass, automatic bypass, defrost allowed |
 | Buttons | Start boost, stop boost, reset filter alarm |
@@ -62,6 +122,26 @@ A button shows **Unknown** until you press it for the first time. That is how Ho
 
 Nothing, until you use a command. It never writes holding registers 40001 to 40003 (the unit's address, speed and parity): a wrong value there cuts the link at the next power cycle. It does not offer the AIRSENS ID reset (coil 9), which forgets the paired probes. It only reads the addresses the S&P table documents.
 
+## Automation example
+
+Start a boost when the bathroom gets humid. The unit ends the boost on its own. Replace the entity IDs with your own.
+
+```yaml
+alias: "Ventilation: boost when the bathroom is humid"
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.bathroom_humidity
+    above: 70
+actions:
+  - action: button.press
+    target:
+      entity_id: button.domeo_evo_225_fl_start_boost
+mode: single
+```
+
+> [!WARNING]
+> Do not copy older YAML examples that call `modbus.write_register` with `address: 2`: that register is the unit's **parity**, and writing it cuts the link at the next power cycle.
+
 ## Known limitations
 
 Being confirmed on real units:
@@ -69,8 +149,6 @@ Being confirmed on real units:
 - **Holiday mode.** The S&P table says coil 4 is *0 = on*, and the integration follows it. A first real unit suggests the opposite. If the switch shows the opposite of what your unit does, please say so in an issue.
 - **Stop boost.** The table says writing 0 stops a boost; S&P support told a user it cannot be stopped (it ends on its own). The integration sends the 0 as a multiple-register write (FC16).
 - **Filter reset.** The integration writes coil 8, as the table says.
-
-The unit reports no serial number, so Home Assistant cannot recognise it after a change of link settings: use **Reconfigure** on the integration rather than adding it again.
 
 ## Troubleshooting
 
@@ -82,13 +160,19 @@ The unit reports no serial number, so Home Assistant cannot recognise it after a
 | Humidity stuck at 54 % | No humidity sensor is fitted (FL and RD units). This is what the unit reports. |
 | Pre-exchanger temperature unknown | No probe is fitted there; the unit flags it as a fault. |
 
-For a bug report, download the diagnostics (**⋮ → Download diagnostics** on the integration's card) and attach the file to an [issue](https://github.com/chpego/ha-domeo-evo/issues). The gateway address is redacted.
+### Debug logs
 
-## How it works
+On the integration's card: **⋮ → Enable debug logging**, reproduce the problem, then **⋮ → Disable debug logging** to download the log.
 
-The register map lives in [`domeo-evo-modbus`](custom_components/domeo_evo/domeo_evo_modbus/), a library built on [`modbus-connection`](https://home-assistant-libs.github.io/modbus-connection/). It is shipped inside the integration until it is published on PyPI. The integration borrows its link from Home Assistant's `modbus` integration, so it can share a gateway with other Modbus integrations.
+### Diagnostics
 
-## Development
+On the integration's card: **⋮ → Download diagnostics**. Attach the file to an [issue](https://github.com/chpego/ha-domeo-evo/issues). The gateway address is redacted.
+
+## Contributing
+
+Bug reports and test reports from real units are welcome, in English or French.
+
+The test suite enforces 100 % line coverage and runs on every pull request:
 
 ```sh
 python3.14 -m venv .venv && . .venv/bin/activate
@@ -96,10 +180,27 @@ pip install -r requirements_test.txt
 pytest --cov
 ```
 
-Releases follow [RELEASING.md](RELEASING.md).
+The register map lives in the `domeo-evo-modbus` library, built on [`modbus-connection`](https://home-assistant-libs.github.io/modbus-connection/). This repository ships its own copy in `custom_components/domeo_evo/domeo_evo_modbus/`; `scripts/vendor_domeo_evo_modbus.sh` updates it. Releases follow [RELEASING.md](RELEASING.md).
+
+## Related projects
+
+- [xtozez/homeassistant-domeo-evo-225fl-modbus](https://github.com/xtozez/homeassistant-domeo-evo-225fl-modbus): the YAML configuration that started it all, with the official S&P register table (PDF).
+- [HACF forum thread](https://forum.hacf.fr/t/vmc-s-p-domeo-evo-225-fl-via-modbus-tcp-rtu/69801): wiring, gateways and real-unit findings (in French).
+- [timlaing/modbus_local_gateway](https://github.com/timlaing/modbus_local_gateway): a generic Modbus integration that ships a DOMEO EVO device file. Run one or the other on the same gateway, or enable multi-host.
 
 ## Disclaimer and license
 
 Not affiliated with or endorsed by S&P (Soler & Palau) or Unelvent. Use at your own risk: commands change how your ventilation runs.
 
 [MIT](LICENSE)
+
+[release-shield]: https://img.shields.io/github/v/release/chpego/ha-domeo-evo.svg?include_prereleases
+[release]: https://github.com/chpego/ha-domeo-evo/releases
+[downloads-shield]: https://img.shields.io/github/downloads/chpego/ha-domeo-evo/total.svg
+[license-shield]: https://img.shields.io/github/license/chpego/ha-domeo-evo.svg
+[tests-shield]: https://github.com/chpego/ha-domeo-evo/actions/workflows/tests.yml/badge.svg
+[tests]: https://github.com/chpego/ha-domeo-evo/actions/workflows/tests.yml
+[hassfest-shield]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hassfest.yml/badge.svg
+[hassfest]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hassfest.yml
+[validation-shield]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hacs.yml/badge.svg
+[validation]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hacs.yml

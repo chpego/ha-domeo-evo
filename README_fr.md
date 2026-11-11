@@ -2,16 +2,59 @@
 
 <img src="https://raw.githubusercontent.com/chpego/ha-domeo-evo/main/custom_components/domeo_evo/brand/icon.png" alt="" width="96" align="right">
 
-Lire et piloter une VMC double flux **S&P DOMEO EVO** (225, 315, 450 ; FL, RD, DHU, Sérénité) depuis Home Assistant, par son port Modbus RTU.
+- Lire et piloter une VMC double flux **S&P DOMEO EVO** (225, 315, 450 ; FL, RD, DHU, Sérénité) depuis Home Assistant, par son port Modbus RTU.
+- Entièrement local : par une passerelle RS485 vers Modbus TCP ou un adaptateur USB RS485. Ni cloud, ni compte.
+- Configuration depuis l'interface, en français ou en anglais.
 
-- **En local**, par une passerelle RS485 vers Modbus TCP ou un adaptateur USB RS485. Ni cloud, ni compte.
-- **Configuration depuis l'interface** : le type de liaison, le modèle et la variante.
-- **Sans risque pour la liaison** : l'intégration n'écrit jamais l'adresse, la vitesse ou la parité de la VMC, et n'écrit rien tant que vous n'utilisez pas une commande.
+[![Release][release-shield]][release]
+[![Downloads][downloads-shield]][release]
+[![License][license-shield]](LICENSE)
+[![Tests][tests-shield]][tests]
+[![Hassfest][hassfest-shield]][hassfest]
+[![Repository validation][validation-shield]][validation]
 
 [English version](README.md)
 
 > [!NOTE]
 > Cette intégration est en **bêta**. Les registres suivent la table officielle S&P, et les premières vraies VMC sont en test sur le [forum HACF](https://forum.hacf.fr/t/vmc-s-p-domeo-evo-225-fl-via-modbus-tcp-rtu/69801). Voir [Limites connues](#limites-connues).
+
+## Sommaire
+
+- [Fonctionnalités](#fonctionnalités)
+- [VMC prises en charge](#vmc-prises-en-charge)
+- [Prérequis](#prérequis)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Mise à jour des données](#mise-à-jour-des-données)
+- [Entités](#entités)
+- [Ce que l'intégration écrit](#ce-que-lintégration-écrit)
+- [Exemple d'automatisation](#exemple-dautomatisation)
+- [Limites connues](#limites-connues)
+- [Dépannage](#dépannage)
+- [Contribuer](#contribuer)
+- [Projets liés](#projets-liés)
+- [Avertissement et licence](#avertissement-et-licence)
+
+## Fonctionnalités
+
+- **En local.** Rien ne sort de votre réseau.
+- **Configuration depuis l'interface.** Le type de liaison (passerelle réseau ou port série), le modèle et la variante.
+- **Débits dans les limites de la VMC.** Les débits bas, haut et freecooling sont bornés selon votre modèle.
+- **Sondes AIRSENS détectées automatiquement.** Un capteur par sonde d'humidité, de CO₂ ou de COV branchée.
+- **Signale le cavalier JP1.** Une entité de diagnostic et une réparation vous préviennent quand la VMC ignore les commandes Modbus.
+- **Sans risque pour la liaison.** Elle n'écrit jamais l'adresse, la vitesse ni la parité de la VMC.
+- **Diagnostic.** Téléchargement en un clic, avec la carte brute des registres et l'adresse de la passerelle masquée.
+- **Traduite.** Français et anglais.
+
+## VMC prises en charge
+
+| VMC | État | Preuve |
+| --- | --- | --- |
+| **DOMEO EVO 225 FL / RD** | Lectures confirmées | Une vraie 225 FL RD ([forum HACF](https://forum.hacf.fr/t/vmc-s-p-domeo-evo-225-fl-via-modbus-tcp-rtu/69801/25)). Les commandes sont en test. |
+| DOMEO EVO 315, 450 | Devrait fonctionner | Même table de registres ; plages de débit par modèle selon la table S&P |
+| Variantes DHU, Sérénité | Devrait fonctionner | Régulation hygro et sondes AIRSENS selon la table S&P, testées sur un simulateur |
+
+Vous avez l'une de ces VMC ? Un retour avec votre fichier de diagnostic est le bienvenu : [ouvrez une issue](https://github.com/chpego/ha-domeo-evo/issues).
 
 ## Prérequis
 
@@ -24,11 +67,19 @@ Lire et piloter une VMC double flux **S&P DOMEO EVO** (225, 315, 450 ; FL, RD, D
 
 ## Installation
 
-[![Ouvrir ce dépôt dans le Marketplace de votre Home Assistant.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=chpego&repository=ha-domeo-evo&category=integration)
+### Marketplace
 
-Ou à la main : **Marketplace → ⋮ → Dépôts personnalisés**, ajoutez `https://github.com/chpego/ha-domeo-evo` avec le type **Intégration**, puis téléchargez **S&P DOMEO EVO**. Pour recevoir les bêtas, activez l'option **Pré-version** du dépôt.
+[![Ouvrir ce dépôt dans le Marketplace de votre Home Assistant.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=chpego&repository=ha-domeo-evo)
 
-Sans le Marketplace : copiez `custom_components/domeo_evo` dans votre dossier `config/custom_components/` et redémarrez Home Assistant.
+Ou à la main : **Paramètres → Marketplace → ⋮ → Dépôts personnalisés**, ajoutez `https://github.com/chpego/ha-domeo-evo` avec le type **Intégration**, puis téléchargez **S&P DOMEO EVO**.
+
+### Versions bêta
+
+Les bêtas sont publiées en pré-versions GitHub. Pour les recevoir, ouvrez ce dépôt dans le Marketplace et activez son option **Pré-version**.
+
+### À la main
+
+Copiez `custom_components/domeo_evo` dans votre dossier `config/custom_components/` et redémarrez Home Assistant.
 
 ## Configuration
 
@@ -41,13 +92,22 @@ Ou **Paramètres → Appareils et services → Ajouter une intégration → S&P 
 3. Laissez l'ID à **1**, sauf si vous l'avez changé.
 4. Choisissez le **modèle** inscrit sur la plaque (225, 315 ou 450) et la **variante**. La VMC ne les indique pas, et ils fixent les plages de débit et les réglages hygro.
 
-Si vous avez aussi une configuration YAML `modbus:` pour cette VMC, désactivez-la, ou vérifiez que la passerelle accepte plusieurs clients (Waveshare : **multi-hôte**).
+Pour changer plus tard l'adresse de la passerelle ou la liaison, utilisez **Reconfigurer** sur l'intégration. La VMC n'a pas de numéro de série : l'ajouter une seconde fois créerait un deuxième appareil.
+
+## Mise à jour des données
+
+- **Lectures** (débit, températures, mode, alarmes, interrupteurs, sondes) : toutes les 30 secondes.
+- **Réglages** (débits, seuils, intervalles) : toutes les 5 minutes, et juste après une modification.
+- **Pannes partielles :** chaque partie de la VMC est lue séparément. Si l'une ne répond pas, seules ses entités deviennent indisponibles.
+- **Passerelle muette :** après trois lectures sans réponse d'affilée, la liaison est rouverte. Certaines passerelles gardent la connexion ouverte alors que la VMC derrière elles ne répond plus.
+
+Home Assistant partage une seule connexion par passerelle et envoie une requête à la fois. Si un autre programme (configuration YAML `modbus:`, Node-RED…) interroge la même passerelle, coupez-le ou activez le mode **multi-hôte** de la passerelle.
 
 ## Entités
 
 | Type | Entités |
 | --- | --- |
-| Capteurs | Débit, mode de fonctionnement, les cinq températures d'air, batterie de préchauffage, télécommande, entrée 0-10 V ; humidité intégrée (DHU, Sérénité) ; un capteur par sonde AIRSENS (humidité, CO₂ ou COV), détectée automatiquement |
+| Capteurs | Débit, mode de fonctionnement, les cinq températures d'air, batterie de préchauffage, télécommande, entrée 0-10 V ; humidité intégrée (DHU, Sérénité) ; un capteur par sonde AIRSENS (humidité, CO₂ ou COV) |
 | Capteurs binaires | Remplacement du filtre, dégivrage, défauts moteurs, défauts des sondes de température, contact CLP, **Pilotage Modbus (JP1)** |
 | Interrupteurs | Mode vacances, by-pass manuel, by-pass automatique, dégivrage autorisé |
 | Boutons | Démarrer le boost, arrêter le boost, réinitialiser l'alarme filtre |
@@ -62,6 +122,26 @@ Un bouton affiche **Inconnu** tant qu'il n'a jamais été pressé. C'est le fonc
 
 Rien, tant que vous n'utilisez pas une commande. Elle n'écrit jamais les registres 40001 à 40003 (adresse, vitesse et parité de la VMC) : une mauvaise valeur y coupe la liaison au prochain redémarrage. Elle ne propose pas la réinitialisation des ID AIRSENS (coil 9), qui oublie les sondes appairées. Elle ne lit que les adresses documentées dans la table S&P.
 
+## Exemple d'automatisation
+
+Lancer un boost quand la salle de bain devient humide. La VMC arrête le boost d'elle-même. Remplacez les identifiants d'entité par les vôtres (avec Home Assistant en français, le bouton s'appelle par exemple `button.domeo_evo_225_fl_demarrer_le_boost`).
+
+```yaml
+alias: "VMC : boost quand la salle de bain est humide"
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.salle_de_bain_humidite
+    above: 70
+actions:
+  - action: button.press
+    target:
+      entity_id: button.domeo_evo_225_fl_demarrer_le_boost
+mode: single
+```
+
+> [!WARNING]
+> Ne recopiez pas les anciens exemples YAML qui appellent `modbus.write_register` avec `address: 2` : ce registre est la **parité** de la VMC, et l'écrire coupe la liaison au prochain redémarrage.
+
 ## Limites connues
 
 En cours de confirmation sur de vraies VMC :
@@ -69,8 +149,6 @@ En cours de confirmation sur de vraies VMC :
 - **Mode vacances.** La table S&P indique pour le coil 4 « 0 = On », et l'intégration la suit. Une première vraie VMC suggère l'inverse. Si l'interrupteur affiche le contraire de ce que fait votre VMC, signalez-le dans une issue.
 - **Arrêt du boost.** La table dit qu'écrire 0 arrête le boost ; le support S&P a répondu à un utilisateur que c'était impossible (il s'arrête seul). L'intégration envoie ce 0 en écriture multiple (FC16).
 - **Reset du filtre.** L'intégration écrit le coil 8, comme l'indique la table.
-
-La VMC n'a pas de numéro de série : Home Assistant ne peut pas la reconnaître après un changement de liaison. Utilisez **Reconfigurer** sur l'intégration plutôt que de l'ajouter une seconde fois.
 
 ## Dépannage
 
@@ -82,10 +160,37 @@ La VMC n'a pas de numéro de série : Home Assistant ne peut pas la reconnaître
 | Humidité bloquée à 54 % | Aucun capteur d'humidité n'est monté (VMC FL et RD). C'est ce que renvoie la VMC. |
 | Température avant échangeur inconnue | Aucune sonde n'est montée à cet endroit ; la VMC la signale en défaut. |
 
-Pour signaler un bug, téléchargez les diagnostics (**⋮ → Télécharger les diagnostics** sur la carte de l'intégration) et joignez le fichier à une [issue](https://github.com/chpego/ha-domeo-evo/issues). L'adresse de la passerelle y est masquée.
+### Logs de débogage
+
+Sur la carte de l'intégration : **⋮ → Activer la journalisation de débogage**, reproduisez le problème, puis **⋮ → Désactiver la journalisation de débogage** pour télécharger le journal.
+
+### Diagnostic
+
+Sur la carte de l'intégration : **⋮ → Télécharger les diagnostics**. Joignez le fichier à une [issue](https://github.com/chpego/ha-domeo-evo/issues). L'adresse de la passerelle y est masquée.
+
+## Contribuer
+
+Les signalements de bugs et les retours de tests sur de vraies VMC sont les bienvenus, en français ou en anglais. Le détail technique (tests, bibliothèque embarquée, releases) est dans la [version anglaise](README.md#contributing).
+
+## Projets liés
+
+- [xtozez/homeassistant-domeo-evo-225fl-modbus](https://github.com/xtozez/homeassistant-domeo-evo-225fl-modbus) : la configuration YAML à l'origine du projet, avec la table officielle des registres S&P (PDF).
+- [Fil du forum HACF](https://forum.hacf.fr/t/vmc-s-p-domeo-evo-225-fl-via-modbus-tcp-rtu/69801) : câblage, passerelles et retours sur de vraies VMC.
+- [timlaing/modbus_local_gateway](https://github.com/timlaing/modbus_local_gateway) : une intégration Modbus générique qui propose un fichier pour la DOMEO EVO. Utilisez l'une ou l'autre sur la même passerelle, ou activez le multi-hôte.
 
 ## Avertissement et licence
 
 Projet indépendant, sans lien avec S&P (Soler & Palau) ni Unelvent. À utiliser sous votre responsabilité : les commandes modifient le fonctionnement de votre ventilation.
 
 [MIT](LICENSE)
+
+[release-shield]: https://img.shields.io/github/v/release/chpego/ha-domeo-evo.svg?include_prereleases
+[release]: https://github.com/chpego/ha-domeo-evo/releases
+[downloads-shield]: https://img.shields.io/github/downloads/chpego/ha-domeo-evo/total.svg
+[license-shield]: https://img.shields.io/github/license/chpego/ha-domeo-evo.svg
+[tests-shield]: https://github.com/chpego/ha-domeo-evo/actions/workflows/tests.yml/badge.svg
+[tests]: https://github.com/chpego/ha-domeo-evo/actions/workflows/tests.yml
+[hassfest-shield]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hassfest.yml/badge.svg
+[hassfest]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hassfest.yml
+[validation-shield]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hacs.yml/badge.svg
+[validation]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hacs.yml
