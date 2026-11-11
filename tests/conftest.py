@@ -11,12 +11,25 @@ from modbus_connection import ModbusTcpParams
 from modbus_connection.mock import MockModbusConnection, MockModbusUnit
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant_custom_component.syrupy import HomeAssistantSnapshotExtension
+from syrupy.assertion import SnapshotAssertion
 
 from custom_components.domeo_evo import PLATFORMS
 from custom_components.domeo_evo.const import DOMAIN
 
 from . import MOCK_ENTRY_ID, MOCK_TCP_DATA, MOCK_TITLE
 from .register_images import FACTORY_225_FL, load_image
+
+
+@pytest.fixture
+def snapshot(snapshot: SnapshotAssertion) -> SnapshotAssertion:
+    """Use Home Assistant's snapshot format and its snapshots/ folder.
+
+    syrupy and pytest-homeassistant-custom-component both register a
+    ``snapshot`` fixture, and which plugin wins depends on the order they
+    load in. A conftest fixture always wins, so CI and local runs agree.
+    """
+    return snapshot.use_extension(HomeAssistantSnapshotExtension)
 
 
 @pytest.fixture(autouse=True)
