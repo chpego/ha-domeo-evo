@@ -34,6 +34,6 @@ jobs:
           zip -r ../../domeo_evo.zip . -x '__pycache__/*' '*/__pycache__/*'
 
       - name: Upload the ZIP to the release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: domeo_evo.zip
