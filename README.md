@@ -1,6 +1,6 @@
 # S&P DOMEO EVO for Home Assistant
 
-<img src="https://raw.githubusercontent.com/chpego/ha-domeo-evo/main/custom_components/domeo_evo/brand/icon.png" alt="" width="96" align="right">
+<img src="https://raw.githubusercontent.com/chpego/ha-domeo-modbus/main/custom_components/domeo_modbus/brand/icon.png" alt="" width="96" align="right">
 
 - Read and control an **S&P DOMEO EVO** heat recovery ventilation unit (225, 315, 450; FL, RD, DHU, Sérénité) from Home Assistant, over its Modbus RTU port.
 - Fully local: through an RS485 to Modbus TCP gateway or a USB RS485 adapter. No cloud, no account.
@@ -54,7 +54,7 @@
 | DOMEO EVO 315, 450 | Expected to work | Same register table; airflow ranges per model from the S&P table |
 | DHU, Sérénité variants | Expected to work | Humidity regulation and AIRSENS probes follow the S&P table, tested on a simulator |
 
-Have one of these units? A test report with your diagnostics file is very welcome: [open an issue](https://github.com/chpego/ha-domeo-evo/issues).
+Have one of these units? A test report with your diagnostics file is very welcome: [open an issue](https://github.com/chpego/ha-domeo-modbus/issues).
 
 ## Prerequisites
 
@@ -69,21 +69,31 @@ Have one of these units? A test report with your diagnostics file is very welcom
 
 ### Marketplace
 
-[![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=chpego&repository=ha-domeo-evo)
+[![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=chpego&repository=ha-domeo-modbus)
 
-Or add it by hand: **Settings → Marketplace → ⋮ → Custom repositories**, add `https://github.com/chpego/ha-domeo-evo` with the type **Integration**, then download **S&P DOMEO EVO**.
+Or add it by hand: **Settings → Marketplace → ⋮ → Custom repositories**, add `https://github.com/chpego/ha-domeo-modbus` with the type **Integration**, then download **S&P DOMEO EVO**.
 
 ### Pre-release versions
 
 Betas are published as GitHub pre-releases. To get them, open this repository in the Marketplace and turn on its **Pre-release** switch.
 
+### Coming from 0.2.0-beta.1
+
+Since 0.2.0-beta.2 the integration is called `domeo_modbus` instead of `domeo_evo`, and the repository `ha-domeo-modbus` instead of `ha-domeo-evo` ([#10](https://github.com/chpego/ha-domeo-modbus/issues/10)). Home Assistant cannot carry the old entry over, so:
+
+1. In **Settings → Devices & services**, delete the **S&P DOMEO EVO** entry.
+2. In the **Marketplace**, remove the integration, then download it again from this repository.
+3. Restart Home Assistant and add the unit again ([Setup](#setup)).
+
+The entity IDs come from the unit's name, so they are the same as before and your automations keep working.
+
 ### Manually
 
-Copy `custom_components/domeo_evo` into your `config/custom_components/` folder and restart Home Assistant.
+Copy `custom_components/domeo_modbus` into your `config/custom_components/` folder and restart Home Assistant.
 
 ## Setup
 
-[![Open your Home Assistant instance and start setting up S&P DOMEO EVO.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=domeo_evo)
+[![Open your Home Assistant instance and start setting up S&P DOMEO EVO.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=domeo_modbus)
 
 Or go to **Settings → Devices & services → Add integration → S&P DOMEO EVO**, then:
 
@@ -166,7 +176,7 @@ On the integration's card: **⋮ → Enable debug logging**, reproduce the probl
 
 ### Diagnostics
 
-On the integration's card: **⋮ → Download diagnostics**. Attach the file to an [issue](https://github.com/chpego/ha-domeo-evo/issues). The gateway address is redacted.
+On the integration's card: **⋮ → Download diagnostics**. Attach the file to an [issue](https://github.com/chpego/ha-domeo-modbus/issues). The gateway address is redacted.
 
 ## Contributing
 
@@ -180,7 +190,7 @@ pip install -r requirements_test.txt
 pytest --cov
 ```
 
-The register map lives in the `domeo-evo-modbus` library, built on [`modbus-connection`](https://home-assistant-libs.github.io/modbus-connection/). This repository ships its own copy in `custom_components/domeo_evo/domeo_evo_modbus/`; `scripts/vendor_domeo_evo_modbus.sh` updates it. Releases follow [RELEASING.md](RELEASING.md).
+The register map lives in the `domeo-evo-modbus` library, built on [`modbus-connection`](https://home-assistant-libs.github.io/modbus-connection/). This repository ships its own copy in `custom_components/domeo_modbus/domeo_evo_modbus/`; `scripts/vendor_domeo_evo_modbus.sh` updates it. Releases follow [RELEASING.md](RELEASING.md).
 
 ## Related projects
 
@@ -194,13 +204,13 @@ Not affiliated with or endorsed by S&P (Soler & Palau) or Unelvent. Use at your 
 
 [MIT](LICENSE)
 
-[release-shield]: https://img.shields.io/github/v/release/chpego/ha-domeo-evo.svg?include_prereleases
-[release]: https://github.com/chpego/ha-domeo-evo/releases
-[downloads-shield]: https://img.shields.io/github/downloads/chpego/ha-domeo-evo/total.svg
-[license-shield]: https://img.shields.io/github/license/chpego/ha-domeo-evo.svg
-[tests-shield]: https://github.com/chpego/ha-domeo-evo/actions/workflows/tests.yml/badge.svg
-[tests]: https://github.com/chpego/ha-domeo-evo/actions/workflows/tests.yml
-[hassfest-shield]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hassfest.yml/badge.svg
-[hassfest]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hassfest.yml
-[validation-shield]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hacs.yml/badge.svg
-[validation]: https://github.com/chpego/ha-domeo-evo/actions/workflows/hacs.yml
+[release-shield]: https://img.shields.io/github/v/release/chpego/ha-domeo-modbus.svg?include_prereleases
+[release]: https://github.com/chpego/ha-domeo-modbus/releases
+[downloads-shield]: https://img.shields.io/github/downloads/chpego/ha-domeo-modbus/total.svg
+[license-shield]: https://img.shields.io/github/license/chpego/ha-domeo-modbus.svg
+[tests-shield]: https://github.com/chpego/ha-domeo-modbus/actions/workflows/tests.yml/badge.svg
+[tests]: https://github.com/chpego/ha-domeo-modbus/actions/workflows/tests.yml
+[hassfest-shield]: https://github.com/chpego/ha-domeo-modbus/actions/workflows/hassfest.yml/badge.svg
+[hassfest]: https://github.com/chpego/ha-domeo-modbus/actions/workflows/hassfest.yml
+[validation-shield]: https://github.com/chpego/ha-domeo-modbus/actions/workflows/hacs.yml/badge.svg
+[validation]: https://github.com/chpego/ha-domeo-modbus/actions/workflows/hacs.yml

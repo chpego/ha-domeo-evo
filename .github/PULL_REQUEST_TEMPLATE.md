@@ -12,7 +12,7 @@
 
 ## Checklist
 
-- [ ] `pytest --cov` passes locally (100 % coverage of `custom_components/domeo_evo`, the vendored library excluded)
+- [ ] `pytest --cov` passes locally (100 % coverage of `custom_components/domeo_modbus`, the vendored library excluded)
 - [ ] `ruff check .`, `ruff format --check .` and `mypy` pass locally
 - [ ] English and French translations are both updated, if any text changed
 - [ ] The manifest version is bumped, if this ships in a release (see `RELEASING.md`)

@@ -1,5 +1,5 @@
 {
-  "domain": "domeo_evo",
+  "domain": "domeo_modbus",
   "name": "S&P DOMEO EVO",
   "categories": [
     "climate.fans_ventilation"
@@ -12,10 +12,10 @@
     "modbus",
     "usb"
   ],
-  "documentation": "https://github.com/chpego/ha-domeo-evo",
+  "documentation": "https://github.com/chpego/ha-domeo-modbus",
   "integration_type": "device",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/chpego/ha-domeo-evo/issues",
+  "issue_tracker": "https://github.com/chpego/ha-domeo-modbus/issues",
   "loggers": [
     "domeo_evo_modbus",
     "modbus_connection",

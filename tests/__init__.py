@@ -5,7 +5,7 @@ from typing import Any
 
 from homeassistant.const import CONF_DEVICE, CONF_HOST, CONF_MODEL, CONF_PORT, CONF_TYPE
 
-from custom_components.domeo_evo.const import (
+from custom_components.domeo_modbus.const import (
     CONF_BAUDRATE,
     CONF_PARITY,
     CONF_UNIT_ID,
@@ -13,7 +13,7 @@ from custom_components.domeo_evo.const import (
     TYPE_SERIAL,
     TYPE_TCP,
 )
-from custom_components.domeo_evo.domeo_evo_modbus import AirSensType
+from custom_components.domeo_modbus.domeo_evo_modbus import AirSensType
 
 from .register_images import FACTORY_225_FL
 
