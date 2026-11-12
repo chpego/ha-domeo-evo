@@ -5,14 +5,21 @@ from dataclasses import dataclass
 from typing import override
 
 from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
+from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
+from .const import DOMAIN
 from .coordinator import DomeoEvoConfigEntry
 from .domeo_evo_modbus import DomeoEvo
 from .entity import DomeoEvoEntity, DomeoEvoEntityDescription
 
 PARALLEL_UPDATES = 1
+
+# 0.2.0-beta.1 had a stop boost button, but a boost cannot be stopped over
+# Modbus (issue #6). Its registry entry is removed so it does not linger.
+REMOVED_BUTTONS = ("stop_boost",)
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -32,12 +39,6 @@ BUTTONS: tuple[DomeoEvoButtonEntityDescription, ...] = (
         press_fn=lambda device: device.settings.async_start_boost(),
     ),
     DomeoEvoButtonEntityDescription(
-        key="stop_boost",
-        translation_key="stop_boost",
-        component="readings",
-        press_fn=lambda device: device.settings.async_stop_boost(),
-    ),
-    DomeoEvoButtonEntityDescription(
         key="reset_filter_alarm",
         translation_key="reset_filter_alarm",
         component="status",
@@ -52,6 +53,12 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the DOMEO EVO buttons."""
+    entity_registry = er.async_get(hass)
+    for key in REMOVED_BUTTONS:
+        if entity_id := entity_registry.async_get_entity_id(
+            Platform.BUTTON, DOMAIN, f"{entry.entry_id}_{key}"
+        ):
+            entity_registry.async_remove(entity_id)
     runtime_data = entry.runtime_data
     async_add_entities(
         DomeoEvoButton(runtime_data, description) for description in BUTTONS

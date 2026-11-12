@@ -44,7 +44,7 @@ FACTORY_225_FL: dict[str, dict[int, Any]] = {
         16: True,  # 10017: no preheat battery
     },
     "coil": {
-        3: True,  # coil 4: holiday mode off (inverted)
+        3: False,  # coil 4: holiday mode off
         4: True,  # coil 5: automatic bypass on
     },
     "holding": {

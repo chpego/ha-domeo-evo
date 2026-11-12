@@ -120,7 +120,7 @@ Home Assistant partage une seule connexion par passerelle et envoie une requête
 | Capteurs | Débit, mode de fonctionnement, les cinq températures d'air, batterie de préchauffage, télécommande, entrée 0-10 V ; humidité intégrée (DHU, Sérénité) ; un capteur par sonde AIRSENS (humidité, CO₂ ou COV) |
 | Capteurs binaires | Remplacement du filtre, dégivrage, défauts moteurs, défauts des sondes de température, contact CLP, **Pilotage Modbus (JP1)** |
 | Interrupteurs | Mode vacances, by-pass manuel, by-pass automatique, dégivrage autorisé |
-| Boutons | Démarrer le boost, arrêter le boost, réinitialiser l'alarme filtre |
+| Boutons | Démarrer le boost, réinitialiser l'alarme filtre |
 | Listes | Mode automatique (proportionnel ou agile), type de contact CLP |
 | Nombres | Débits bas, haut et freecooling (bornés selon le modèle), seuils de by-pass, durée du by-pass manuel, intervalle du filtre, correction et décalage du débit ; régulation hygro et qualité d'air (DHU, Sérénité) |
 
@@ -134,7 +134,7 @@ Rien, tant que vous n'utilisez pas une commande. Elle n'écrit jamais les regist
 
 ## Exemple d'automatisation
 
-Lancer un boost quand la salle de bain devient humide. La VMC arrête le boost d'elle-même. Remplacez les identifiants d'entité par les vôtres (avec Home Assistant en français, le bouton s'appelle par exemple `button.domeo_evo_225_fl_demarrer_le_boost`).
+Lancer un boost quand la salle de bain devient humide. La VMC arrête le boost d'elle-même au bout de 30 minutes ; il ne peut pas être arrêté plus tôt par Modbus. Remplacez les identifiants d'entité par les vôtres (avec Home Assistant en français, le bouton s'appelle par exemple `button.domeo_evo_225_fl_demarrer_le_boost`).
 
 ```yaml
 alias: "VMC : boost quand la salle de bain est humide"
@@ -154,11 +154,9 @@ mode: single
 
 ## Limites connues
 
-En cours de confirmation sur de vraies VMC :
-
-- **Mode vacances.** La table S&P indique pour le coil 4 « 0 = On », et l'intégration la suit. Une première vraie VMC suggère l'inverse. Si l'interrupteur affiche le contraire de ce que fait votre VMC, signalez-le dans une issue.
-- **Arrêt du boost.** La table dit qu'écrire 0 arrête le boost ; le support S&P a répondu à un utilisateur que c'était impossible (il s'arrête seul). L'intégration envoie ce 0 en écriture multiple (FC16).
-- **Reset du filtre.** L'intégration écrit le coil 8, comme l'indique la table.
+- **Mode vacances.** La table S&P indique pour le coil 4 « 0 = On », mais les retours de deux vraies VMC indiquent l'inverse : l'intégration le lit et l'écrit donc en « 1 = On » ([#6](https://github.com/chpego/ha-domeo-evo/issues/6)). Si l'interrupteur affiche le contraire de ce que fait votre VMC, signalez-le dans une issue.
+- **Pas d'arrêt du boost.** La table dit qu'écrire 0 arrête le boost, mais une vraie VMC l'ignore (en FC06 comme en FC16), et le support S&P a confirmé qu'un boost ne peut pas être arrêté par Modbus. Il s'arrête seul au bout de 30 minutes, l'intégration n'a donc pas de bouton d'arrêt.
+- **Reset du filtre.** En cours de confirmation sur de vraies VMC. L'intégration écrit le coil 8, comme l'indique la table.
 
 ## Dépannage
 

@@ -140,9 +140,6 @@
       },
       "start_boost": {
         "name": "Démarrer le boost"
-      },
-      "stop_boost": {
-        "name": "Arrêter le boost"
       }
     },
     "number": {

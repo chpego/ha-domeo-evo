@@ -120,7 +120,7 @@ Home Assistant shares one connection per gateway and sends one request at a time
 | Sensors | Airflow, operating mode, the five air temperatures, preheater, control panel, 0-10 V input; integrated humidity (DHU, Sérénité); one sensor per AIRSENS probe (humidity, CO₂ or VOC) |
 | Binary sensors | Filter replacement, defrost, motor faults, temperature probe faults, CLP contact, **Modbus control (JP1)** |
 | Switches | Holiday mode, manual bypass, automatic bypass, defrost allowed |
-| Buttons | Start boost, stop boost, reset filter alarm |
+| Buttons | Start boost, reset filter alarm |
 | Selects | Automatic mode (proportional or agile), CLP contact type |
 | Numbers | Low, high and freecooling airflow (limited to the model's range), bypass thresholds, manual bypass duration, filter interval, airflow correction and offset; humidity and air-quality regulation (DHU, Sérénité) |
 
@@ -134,7 +134,7 @@ Nothing, until you use a command. It never writes holding registers 40001 to 400
 
 ## Automation example
 
-Start a boost when the bathroom gets humid. The unit ends the boost on its own. Replace the entity IDs with your own.
+Start a boost when the bathroom gets humid. The unit ends the boost on its own after 30 minutes; it cannot be stopped earlier over Modbus. Replace the entity IDs with your own.
 
 ```yaml
 alias: "Ventilation: boost when the bathroom is humid"
@@ -154,11 +154,9 @@ mode: single
 
 ## Known limitations
 
-Being confirmed on real units:
-
-- **Holiday mode.** The S&P table says coil 4 is *0 = on*, and the integration follows it. A first real unit suggests the opposite. If the switch shows the opposite of what your unit does, please say so in an issue.
-- **Stop boost.** The table says writing 0 stops a boost; S&P support told a user it cannot be stopped (it ends on its own). The integration sends the 0 as a multiple-register write (FC16).
-- **Filter reset.** The integration writes coil 8, as the table says.
+- **Holiday mode.** The S&P table says coil 4 is *0 = on*, but reports from two real units point the other way, so the integration reads and writes it as *1 = on* ([#6](https://github.com/chpego/ha-domeo-evo/issues/6)). If the switch shows the opposite of what your unit does, please say so in an issue.
+- **No stop boost.** The table says writing 0 stops a boost, but a real unit ignores it (FC06 and FC16 alike), and S&P support confirmed a boost cannot be stopped over Modbus. It ends on its own after 30 minutes, so the integration has no stop button.
+- **Filter reset.** Being confirmed on real units. The integration writes coil 8, as the table says.
 
 ## Troubleshooting
 

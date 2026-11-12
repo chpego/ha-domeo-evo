@@ -140,9 +140,6 @@
             },
             "start_boost": {
                 "name": "Start boost"
-            },
-            "stop_boost": {
-                "name": "Stop boost"
             }
         },
         "number": {

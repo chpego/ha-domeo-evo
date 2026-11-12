@@ -20,10 +20,12 @@ BAUDRATES = {5: 4800, 6: 9600, 8: 19200, 10: 38400}
 # Holding 40003: the parity codes, as ModbusSerialParams spells them.
 PARITIES = {0: "N", 1: "O", 2: "E"}
 
-# Holding 40010 is a push button: writing 1 starts the boost, the register
-# keeps reading 0, and the unit returns to its normal airflow on its own.
+# Holding 40010 is a push button: writing 1 starts the boost, and the unit
+# returns to its normal airflow on its own after 30 minutes. The table says
+# writing 0 stops it early, but a real unit ignores it (FC06 or FC16), and
+# S&P support confirmed a boost cannot be stopped over Modbus
+# (chpego/ha-domeo-evo#6).
 BOOST_START = 1
-BOOST_STOP = 0
 
 # The union of the airflow ranges of every unit size. The device object
 # narrows a write to the range of the configured size.
@@ -60,7 +62,7 @@ class Settings(Component):
     """The airflow while the bypass is open."""
 
     _flow_command = integer(  # 40010
-        9, signed=False, writable=int_range(BOOST_STOP, BOOST_START)
+        9, signed=False, writable=int_range(BOOST_START, BOOST_START)
     )
 
     bypass_outdoor_minimum = integer(  # 40039, T21
@@ -116,17 +118,6 @@ class Settings(Component):
     async def async_start_boost(self) -> None:
         """Run at high airflow for a while (the unit stops on its own)."""
         await self.write("_flow_command", BOOST_START)
-
-    async def async_stop_boost(self) -> None:
-        """Ask the unit to leave boost early.
-
-        The S&P table says writing 0 while boosting stops it, but some units
-        are reported to ignore a single-register write (FC06) here, so this
-        write goes out as FC16.
-        """
-        await self.modbus_unit.write_registers(
-            self.resolved_fields["_flow_command"].address, [BOOST_STOP]
-        )
 
 
 class HumiditySettings(Component):
