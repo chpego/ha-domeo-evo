@@ -20,7 +20,11 @@ from homeassistant.const import ATTR_ENTITY_ID, SERVICE_TURN_OFF, SERVICE_TURN_O
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import entity_registry as er
-from modbus_connection import IllegalDataValueError, IllegalFunctionError
+from modbus_connection import (
+    IllegalDataValueError,
+    IllegalFunctionError,
+    ModbusTimeoutError,
+)
 from modbus_connection.mock import MockModbusUnit, WriteEvent
 import pytest
 from pytest_homeassistant_custom_component.common import (
@@ -143,6 +147,44 @@ async def test_holiday_mode_state_follows_the_unit(
     )
     await hass.async_block_till_done(wait_background_tasks=True)
     assert hass.states.get("switch.domeo_evo_225_fl_holiday_mode").state == "on"
+
+
+@pytest.mark.usefixtures("init_integration")
+async def test_boost_refused_in_holiday_mode(
+    hass: HomeAssistant, mock_unit: MockModbusUnit, writes: list[WriteEvent]
+) -> None:
+    """Test boost fails with a reason while holiday mode is on.
+
+    Real units ignore the boost request in holiday mode (issue #6). The panel
+    turned holiday mode on after the last poll: the press reads it again.
+    """
+    mock_unit.load_raw({"coil": {3: True}})
+    with pytest.raises(ServiceValidationError) as exc_info:
+        await hass.services.async_call(
+            BUTTON_DOMAIN,
+            SERVICE_PRESS,
+            {ATTR_ENTITY_ID: "button.domeo_evo_225_fl_start_boost"},
+            blocking=True,
+        )
+    assert exc_info.value.translation_key == "boost_in_holiday_mode"
+    assert writes == []
+
+
+@pytest.mark.usefixtures("init_integration")
+async def test_boost_read_failure(
+    hass: HomeAssistant, mock_unit: MockModbusUnit, writes: list[WriteEvent]
+) -> None:
+    """Test boost fails cleanly when holiday mode cannot be read."""
+    mock_unit.fail_read(3, ModbusTimeoutError(), register_type="coil")
+    with pytest.raises(HomeAssistantError) as exc_info:
+        await hass.services.async_call(
+            BUTTON_DOMAIN,
+            SERVICE_PRESS,
+            {ATTR_ENTITY_ID: "button.domeo_evo_225_fl_start_boost"},
+            blocking=True,
+        )
+    assert exc_info.value.translation_key == "write_failed"
+    assert writes == []
 
 
 @pytest.mark.usefixtures("init_integration")

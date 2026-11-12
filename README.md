@@ -154,8 +154,9 @@ mode: single
 
 ## Known limitations
 
-- **Holiday mode.** The S&P table says coil 4 is *0 = on*, but reports from two real units point the other way, so the integration reads and writes it as *1 = on* ([#6](https://github.com/chpego/ha-domeo-evo/issues/6)). If the switch shows the opposite of what your unit does, please say so in an issue.
+- **Holiday mode.** The S&P table says coil 4 is *0 = on*, but reports from two real units point the other way, so the integration reads and writes it as *1 = on* ([#6](https://github.com/chpego/ha-domeo-modbus/issues/6)). If the switch shows the opposite of what your unit does, please say so in an issue.
 - **No stop boost.** The table says writing 0 stops a boost, but a real unit ignores it (FC06 and FC16 alike), and S&P support confirmed a boost cannot be stopped over Modbus. It ends on its own after 30 minutes, so the integration has no stop button.
+- **No boost in holiday mode.** A real unit does not start a boost while holiday mode is on. The start boost button then fails with a message asking you to turn holiday mode off first.
 - **Filter reset.** Being confirmed on real units. The integration writes coil 8, as the table says.
 
 ## Troubleshooting

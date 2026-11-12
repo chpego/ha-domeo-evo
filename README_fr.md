@@ -154,8 +154,9 @@ mode: single
 
 ## Limites connues
 
-- **Mode vacances.** La table S&P indique pour le coil 4 « 0 = On », mais les retours de deux vraies VMC indiquent l'inverse : l'intégration le lit et l'écrit donc en « 1 = On » ([#6](https://github.com/chpego/ha-domeo-evo/issues/6)). Si l'interrupteur affiche le contraire de ce que fait votre VMC, signalez-le dans une issue.
+- **Mode vacances.** La table S&P indique pour le coil 4 « 0 = On », mais les retours de deux vraies VMC indiquent l'inverse : l'intégration le lit et l'écrit donc en « 1 = On » ([#6](https://github.com/chpego/ha-domeo-modbus/issues/6)). Si l'interrupteur affiche le contraire de ce que fait votre VMC, signalez-le dans une issue.
 - **Pas d'arrêt du boost.** La table dit qu'écrire 0 arrête le boost, mais une vraie VMC l'ignore (en FC06 comme en FC16), et le support S&P a confirmé qu'un boost ne peut pas être arrêté par Modbus. Il s'arrête seul au bout de 30 minutes, l'intégration n'a donc pas de bouton d'arrêt.
+- **Pas de boost en mode vacances.** Une vraie VMC ne lance pas de boost tant que le mode vacances est activé. Le bouton de boost affiche alors un message demandant de désactiver d'abord le mode vacances.
 - **Reset du filtre.** En cours de confirmation sur de vraies VMC. L'intégration écrit le coil 8, comme l'indique la table.
 
 ## Dépannage

@@ -295,6 +295,9 @@
     }
   },
   "exceptions": {
+    "boost_in_holiday_mode": {
+      "message": "La VMC ne lance pas de boost tant que le mode vacances est activé. Désactivez d'abord le mode vacances."
+    },
     "cannot_connect": {
       "message": "Impossible de joindre la VMC : {error}"
     },

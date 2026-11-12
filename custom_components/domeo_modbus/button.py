@@ -7,6 +7,7 @@ from typing import override
 from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -20,6 +21,23 @@ PARALLEL_UPDATES = 1
 # 0.2.0-beta.1 had a stop boost button, but a boost cannot be stopped over
 # Modbus (issue #6). Its registry entry is removed so it does not linger.
 REMOVED_BUTTONS = ("stop_boost",)
+
+
+async def _async_start_boost(device: DomeoEvo) -> None:
+    """Start a boost, unless holiday mode would make the unit ignore it.
+
+    Real units leave the boost request unanswered while holiday mode is on
+    (issue #6), so the press fails with a reason instead of doing nothing.
+    Holiday mode is read again first: the panel may have changed it since the
+    last poll.
+    """
+    await device.controls.async_update()
+    if device.controls.holiday_mode:
+        raise ServiceValidationError(
+            translation_domain=DOMAIN,
+            translation_key="boost_in_holiday_mode",
+        )
+    await device.settings.async_start_boost()
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -36,7 +54,7 @@ BUTTONS: tuple[DomeoEvoButtonEntityDescription, ...] = (
         key="start_boost",
         translation_key="start_boost",
         component="readings",
-        press_fn=lambda device: device.settings.async_start_boost(),
+        press_fn=_async_start_boost,
     ),
     DomeoEvoButtonEntityDescription(
         key="reset_filter_alarm",
