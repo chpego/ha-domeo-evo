@@ -26,7 +26,7 @@ from pytest_homeassistant_custom_component.common import (
     async_fire_time_changed,
 )
 
-from custom_components.domeo_evo.const import (
+from custom_components.domeo_modbus.const import (
     DOMAIN,
     READINGS_INTERVAL,
     SETTINGS_INTERVAL,

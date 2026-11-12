@@ -24,7 +24,7 @@ from modbus_connection.mock import MockModbusUnit, WriteEvent
 import pytest
 from pytest_homeassistant_custom_component.common import async_fire_time_changed
 
-from custom_components.domeo_evo.const import READINGS_INTERVAL
+from custom_components.domeo_modbus.const import READINGS_INTERVAL
 
 from . import MOCK_SERENITE_DATA, serenite_image
 

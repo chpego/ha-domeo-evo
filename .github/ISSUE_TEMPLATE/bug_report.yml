@@ -85,5 +85,5 @@ body:
     id: logs
     attributes:
       label: Logs
-      description: Lines from Settings → System → Logs that mention domeo_evo, if any. See "Debug logs" in the README.
+      description: Lines from Settings → System → Logs that mention domeo_modbus, if any. See "Debug logs" in the README.
       render: text

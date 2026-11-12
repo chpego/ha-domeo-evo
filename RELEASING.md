@@ -10,7 +10,7 @@ a breaking change bumps MINOR.
 - **MINOR** — new entities, a new option, support for a new variant.
 - **PATCH** — a fix, or a re-vendored library that changes nothing visible.
 
-The version in `custom_components/domeo_evo/manifest.json` is bumped in the
+The version in `custom_components/domeo_modbus/manifest.json` is bumped in the
 same commit as the change it ships. The release tag is that exact version,
 with no `v` prefix: the Marketplace compares the tag with the manifest, and
 the release workflow refuses a mismatch.
@@ -47,7 +47,7 @@ Tests run against the Home Assistant pinned by
 ## The vendored library
 
 The register map lives in `domeo-evo-modbus` and is copied into
-`custom_components/domeo_evo/domeo_evo_modbus/` until it is on PyPI. Change it
+`custom_components/domeo_modbus/domeo_evo_modbus/` until it is on PyPI. Change it
 there, commit, then run:
 
 ```sh
@@ -65,5 +65,5 @@ scripts/vendor_domeo_evo_modbus.sh ../domeo-evo-modbus
 3. Write the notes for the people who run it: what changed for them first,
    any action they must take at the top. GitHub's **Generate release notes**
    gives a starting list (`.github/release.yml` sets the categories).
-4. Publish. The **Release** workflow attaches `domeo_evo.zip`, which the
+4. Publish. The **Release** workflow attaches `domeo_modbus.zip`, which the
    Marketplace installs.

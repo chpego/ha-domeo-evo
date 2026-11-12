@@ -7,8 +7,8 @@ asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]
 
 [tool.coverage.run]
-source = ["custom_components/domeo_evo"]
-omit = ["custom_components/domeo_evo/domeo_evo_modbus/*"]
+source = ["custom_components/domeo_modbus"]
+omit = ["custom_components/domeo_modbus/domeo_evo_modbus/*"]
 
 [tool.coverage.report]
 show_missing = true
@@ -18,7 +18,7 @@ fail_under = 100
 target-version = "py314"
 extend-exclude = [
   # Vendored: linted in its own repository.
-  "custom_components/domeo_evo/domeo_evo_modbus",
+  "custom_components/domeo_modbus/domeo_evo_modbus",
   "tests/register_images.py",
 ]
 
@@ -55,6 +55,6 @@ warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
 warn_unused_ignores = true
-files = ["custom_components/domeo_evo"]
-exclude = ["custom_components/domeo_evo/domeo_evo_modbus/"]
+files = ["custom_components/domeo_modbus"]
+exclude = ["custom_components/domeo_modbus/domeo_evo_modbus/"]
 follow_imports = "silent"

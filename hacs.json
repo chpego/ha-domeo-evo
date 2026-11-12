@@ -3,5 +3,5 @@
   "homeassistant": "2026.10.2",
   "render_readme": true,
   "zip_release": true,
-  "filename": "domeo_evo.zip"
+  "filename": "domeo_modbus.zip"
 }

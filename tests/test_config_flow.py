@@ -13,7 +13,7 @@ from modbus_connection.mock import MockModbusConnection, MockModbusUnit
 import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
-from custom_components.domeo_evo.const import CONF_BAUDRATE, CONF_VARIANT, DOMAIN
+from custom_components.domeo_modbus.const import CONF_BAUDRATE, CONF_VARIANT, DOMAIN
 
 from . import (
     MOCK_SERIAL_DATA,
@@ -171,7 +171,7 @@ async def test_user_flow_probe_raises(
     """Test errors raised around the probe itself."""
     flow_id = await _start(hass, "tcp")
     with patch(
-        "custom_components.domeo_evo.config_flow.DomeoEvo.async_validate",
+        "custom_components.domeo_modbus.config_flow.DomeoEvo.async_validate",
         side_effect=side_effect,
     ):
         result = await hass.config_entries.flow.async_configure(flow_id, MOCK_TCP_INPUT)
@@ -336,7 +336,7 @@ async def test_reconfigure_line_settings_of_a_loaded_entry(
 
     mock_unit.input[2] = 1
     with patch(
-        "custom_components.domeo_evo.async_setup_entry",
+        "custom_components.domeo_modbus.async_setup_entry",
         new_callable=AsyncMock,
         return_value=True,
     ):

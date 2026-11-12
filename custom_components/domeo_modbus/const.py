@@ -3,7 +3,7 @@
 from datetime import timedelta
 from typing import Literal
 
-DOMAIN = "domeo_evo"
+DOMAIN = "domeo_modbus"
 MANUFACTURER = "S&P"
 
 CONF_BAUDRATE = "baudrate"

@@ -14,8 +14,8 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 from pytest_homeassistant_custom_component.syrupy import HomeAssistantSnapshotExtension
 from syrupy.assertion import SnapshotAssertion
 
-from custom_components.domeo_evo import PLATFORMS
-from custom_components.domeo_evo.const import DOMAIN
+from custom_components.domeo_modbus import PLATFORMS
+from custom_components.domeo_modbus.const import DOMAIN
 
 from . import MOCK_ENTRY_ID, MOCK_TCP_DATA, MOCK_TITLE
 from .register_images import FACTORY_225_FL, load_image
@@ -52,7 +52,7 @@ def entity_registry_enabled_by_default() -> Generator[None]:
 def mock_setup_entry() -> Generator[AsyncMock]:
     """Override async_setup_entry."""
     with patch(
-        "custom_components.domeo_evo.async_setup_entry",
+        "custom_components.domeo_modbus.async_setup_entry",
         new_callable=AsyncMock,
         return_value=True,
     ) as mock_setup_entry:
@@ -89,7 +89,7 @@ def mock_unit(mock_connection: MockModbusConnection) -> MockModbusUnit:
 def mock_get_unit(mock_connection: MockModbusConnection) -> Generator[MagicMock]:
     """Hand the integration a unit on the mock connection."""
     with patch(
-        "custom_components.domeo_evo.async_get_unit",
+        "custom_components.domeo_modbus.async_get_unit",
         side_effect=lambda hass, entry, params, unit_id: mock_connection.for_unit(
             unit_id
         ),
@@ -110,7 +110,7 @@ def mock_temporary_unit(
         yield mock_connection.for_unit(unit_id)
 
     with patch(
-        "custom_components.domeo_evo.config_flow.async_get_temporary_unit",
+        "custom_components.domeo_modbus.config_flow.async_get_temporary_unit",
         side_effect=_get_unit,
     ) as mock_temporary_unit:
         yield mock_temporary_unit
@@ -140,7 +140,7 @@ async def init_integration(
     """Set up the integration with the mock unit."""
     mock_config_entry.add_to_hass(hass)
     with patch(
-        "custom_components.domeo_evo.PLATFORMS",
+        "custom_components.domeo_modbus.PLATFORMS",
         [platform for platform in PLATFORMS if platform in platforms],
     ):
         await hass.config_entries.async_setup(mock_config_entry.entry_id)

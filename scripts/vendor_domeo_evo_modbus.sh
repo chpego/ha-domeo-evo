@@ -9,7 +9,7 @@ set -euo pipefail
 
 src="${1:?usage: $0 <path to a domeo-evo-modbus checkout>}"
 repo="$(cd "$(dirname "$0")/.." && pwd)"
-dest="$repo/custom_components/domeo_evo/domeo_evo_modbus"
+dest="$repo/custom_components/domeo_modbus/domeo_evo_modbus"
 
 if [ -n "$(git -C "$src" status --porcelain)" ]; then
     echo "error: $src has uncommitted changes; commit them first" >&2
