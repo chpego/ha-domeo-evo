@@ -5,7 +5,7 @@
         },
         "error": {
             "cannot_connect": "Failed to connect",
-            "not_a_domeo_evo": "A device answers at this address, but it does not answer like a DOMEO EVO.",
+            "not_a_domeo_evo": "A device answers at this address, but it does not answer like a DOMEO EVO. The previous Domeo range (Domeo 210, Domeo DHU or Hygro, Flexeo, Ideo, Atacama) uses another register table and is not supported.",
             "unit_silent": "The link is up, but the unit does not answer. Check that jumper JP1 is closed, and that the line settings (19200 baud, even parity, 1 stop bit by default) match the unit.",
             "unknown": "Unexpected error"
         },
@@ -340,7 +340,7 @@
         },
         "variant": {
             "options": {
-                "dhu": "DHU (humidity detection)",
+                "dhu": "DOMEO EVO DHU (humidity detection)",
                 "fl": "FL or RD (no humidity regulation)",
                 "serenite": "S\u00e9r\u00e9nit\u00e9 (air quality and humidity)"
             }

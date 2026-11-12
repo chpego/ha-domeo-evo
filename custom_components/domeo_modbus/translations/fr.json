@@ -5,7 +5,7 @@
     },
     "error": {
       "cannot_connect": "Échec de la connexion",
-      "not_a_domeo_evo": "Un appareil répond à cette adresse, mais pas comme une DOMEO EVO.",
+      "not_a_domeo_evo": "Un appareil répond à cette adresse, mais pas comme une DOMEO EVO. L'ancienne gamme Domeo (Domeo 210, Domeo DHU ou Hygro, Flexeo, Ideo, Atacama) utilise une autre table de registres et n'est pas prise en charge.",
       "unit_silent": "La liaison fonctionne, mais la VMC ne répond pas. Vérifiez que le cavalier JP1 est fermé et que les réglages de ligne (19200 bauds, parité paire, 1 bit de stop par défaut) correspondent à la VMC.",
       "unknown": "Erreur inattendue"
     },
@@ -340,7 +340,7 @@
     },
     "variant": {
       "options": {
-        "dhu": "DHU (détection d'humidité)",
+        "dhu": "DOMEO EVO DHU (détection d'humidité)",
         "fl": "FL ou RD (sans régulation hygro)",
         "serenite": "Sérénité (qualité d'air et humidité)"
       }

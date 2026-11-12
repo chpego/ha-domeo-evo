@@ -54,6 +54,8 @@
 | DOMEO EVO 315, 450 | Expected to work | Same register table; airflow ranges per model from the S&P table |
 | DHU, Sérénité variants | Expected to work | Humidity regulation and AIRSENS probes follow the S&P table, tested on a simulator |
 
+**Not supported:** the previous Domeo range (Domeo 210, the previous Domeo DHU or Hygro, Flexeo, Ideo, and the Atacama sold by Leroy Merlin). It uses another register table, where the same addresses mean other settings, so the integration refuses these units when you add them ([#7](https://github.com/chpego/ha-domeo-modbus/issues/7)). "DHU" here means the DOMEO EVO DHU.
+
 Have one of these units? A test report with your diagnostics file is very welcome: [open an issue](https://github.com/chpego/ha-domeo-modbus/issues).
 
 ## Prerequisites

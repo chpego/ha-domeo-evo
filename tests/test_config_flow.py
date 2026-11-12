@@ -22,6 +22,7 @@ from . import (
     MOCK_TCP_INPUT,
     MOCK_TITLE,
 )
+from .register_images import PREVIOUS_DOMEO_210_FL
 
 pytestmark = pytest.mark.usefixtures("mock_temporary_unit")
 
@@ -89,6 +90,11 @@ async def test_title_names_model_and_variant(
             lambda connection, unit: unit.input.update({2: 9}),
             "not_a_domeo_evo",
             id="other_device",
+        ),
+        pytest.param(
+            lambda connection, unit: unit.input.update(PREVIOUS_DOMEO_210_FL["input"]),
+            "not_a_domeo_evo",
+            id="previous_domeo_range",
         ),
     ],
 )

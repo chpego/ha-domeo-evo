@@ -54,6 +54,8 @@
 | DOMEO EVO 315, 450 | Devrait fonctionner | Même table de registres ; plages de débit par modèle selon la table S&P |
 | Variantes DHU, Sérénité | Devrait fonctionner | Régulation hygro et sondes AIRSENS selon la table S&P, testées sur un simulateur |
 
+**Non prises en charge :** l'ancienne gamme Domeo (Domeo 210, ancienne Domeo DHU ou Hygro, Flexeo, Ideo, et l'Atacama vendue par Leroy Merlin). Elle utilise une autre table de registres, où les mêmes adresses correspondent à d'autres réglages : l'intégration refuse donc ces VMC à l'ajout ([#7](https://github.com/chpego/ha-domeo-modbus/issues/7)). Ici, « DHU » désigne la DOMEO EVO DHU.
+
 Vous avez l'une de ces VMC ? Un retour avec votre fichier de diagnostic est le bienvenu : [ouvrez une issue](https://github.com/chpego/ha-domeo-modbus/issues).
 
 ## Prérequis
