@@ -22,10 +22,10 @@ class Controls(Component):
     _equipment_version = coil(0)  # coil 1, read-only here
     _auto_mode = coil(1, writable=True)  # coil 2
     _clp_contact = coil(2, writable=True)  # coil 3
-    # The table gives 0 = On and 1 = Off for holiday mode, the reverse of
-    # every other coil. Only the properties and setters below may read or
-    # write it, so the inversion lives in exactly one place.
-    _holiday_mode_off = coil(3, writable=True)  # coil 4
+    # The table gives 0 = On and 1 = Off for holiday mode, but reports from
+    # two real units point the other way: 1 = On, like every other coil
+    # (chpego/ha-domeo-evo#6).
+    _holiday_mode = coil(3, writable=True)  # coil 4
     _auto_bypass = coil(4, writable=True)  # coil 5
     _manual_bypass = coil(5, writable=True)  # coil 6
     _defrost_cancelled = coil(6, writable=True)  # coil 7: 0 = allow, 1 = cancel
@@ -52,8 +52,7 @@ class Controls(Component):
     @property
     def holiday_mode(self) -> bool | None:
         """Whether holiday mode (halved airflow) is on."""
-        raw = self._holiday_mode_off
-        return None if raw is None else not raw
+        return self._holiday_mode
 
     @property
     def auto_bypass(self) -> bool | None:
@@ -81,7 +80,7 @@ class Controls(Component):
 
     async def async_set_holiday_mode(self, on: bool) -> None:
         """Turn holiday mode on or off."""
-        await self.write("_holiday_mode_off", not on)
+        await self.write("_holiday_mode", bool(on))
 
     async def async_set_auto_bypass(self, on: bool) -> None:
         """Let the bypass open automatically, or not."""

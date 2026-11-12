@@ -140,9 +140,6 @@
             },
             "start_boost": {
                 "name": "Start boost"
-            },
-            "stop_boost": {
-                "name": "Stop boost"
             }
         },
         "number": {
@@ -298,6 +295,9 @@
         }
     },
     "exceptions": {
+        "boost_in_holiday_mode": {
+            "message": "The unit does not start a boost while holiday mode is on. Turn holiday mode off first."
+        },
         "cannot_connect": {
             "message": "Failed to reach the unit: {error}"
         },

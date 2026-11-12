@@ -19,18 +19,25 @@ from homeassistant.components.switch import DOMAIN as SWITCH_DOMAIN
 from homeassistant.const import ATTR_ENTITY_ID, SERVICE_TURN_OFF, SERVICE_TURN_ON
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
-from modbus_connection import IllegalDataValueError, IllegalFunctionError
+from homeassistant.helpers import entity_registry as er
+from modbus_connection import (
+    IllegalDataValueError,
+    IllegalFunctionError,
+    ModbusTimeoutError,
+)
 from modbus_connection.mock import MockModbusUnit, WriteEvent
 import pytest
-from pytest_homeassistant_custom_component.common import async_fire_time_changed
+from pytest_homeassistant_custom_component.common import (
+    MockConfigEntry,
+    async_fire_time_changed,
+)
 
-from custom_components.domeo_modbus.const import READINGS_INTERVAL
+from custom_components.domeo_modbus.const import DOMAIN, READINGS_INTERVAL
 
-from . import MOCK_SERENITE_DATA, serenite_image
+from . import MOCK_ENTRY_ID, MOCK_SERENITE_DATA, serenite_image
 
 COIL = 0x05
 FC06 = 0x06
-FC16 = 0x10
 
 
 @pytest.fixture
@@ -49,16 +56,16 @@ def writes(mock_unit: MockModbusUnit) -> list[WriteEvent]:
             SERVICE_TURN_ON,
             "switch.domeo_evo_225_fl_holiday_mode",
             {},
-            WriteEvent("coil", 3, [False], COIL),
-            id="holiday_mode_on_writes_0",
+            WriteEvent("coil", 3, [True], COIL),
+            id="holiday_mode_on_writes_1",
         ),
         pytest.param(
             SWITCH_DOMAIN,
             SERVICE_TURN_OFF,
             "switch.domeo_evo_225_fl_holiday_mode",
             {},
-            WriteEvent("coil", 3, [True], COIL),
-            id="holiday_mode_off_writes_1",
+            WriteEvent("coil", 3, [False], COIL),
+            id="holiday_mode_off_writes_0",
         ),
         pytest.param(
             SWITCH_DOMAIN,
@@ -83,14 +90,6 @@ def writes(mock_unit: MockModbusUnit) -> list[WriteEvent]:
             {},
             WriteEvent("holding", 9, [1], FC06),
             id="start_boost",
-        ),
-        pytest.param(
-            BUTTON_DOMAIN,
-            SERVICE_PRESS,
-            "button.domeo_evo_225_fl_stop_boost",
-            {},
-            WriteEvent("holding", 9, [0], FC16),
-            id="stop_boost",
         ),
         pytest.param(
             BUTTON_DOMAIN,
@@ -148,6 +147,44 @@ async def test_holiday_mode_state_follows_the_unit(
     )
     await hass.async_block_till_done(wait_background_tasks=True)
     assert hass.states.get("switch.domeo_evo_225_fl_holiday_mode").state == "on"
+
+
+@pytest.mark.usefixtures("init_integration")
+async def test_boost_refused_in_holiday_mode(
+    hass: HomeAssistant, mock_unit: MockModbusUnit, writes: list[WriteEvent]
+) -> None:
+    """Test boost fails with a reason while holiday mode is on.
+
+    Real units ignore the boost request in holiday mode (issue #6). The panel
+    turned holiday mode on after the last poll: the press reads it again.
+    """
+    mock_unit.load_raw({"coil": {3: True}})
+    with pytest.raises(ServiceValidationError) as exc_info:
+        await hass.services.async_call(
+            BUTTON_DOMAIN,
+            SERVICE_PRESS,
+            {ATTR_ENTITY_ID: "button.domeo_evo_225_fl_start_boost"},
+            blocking=True,
+        )
+    assert exc_info.value.translation_key == "boost_in_holiday_mode"
+    assert writes == []
+
+
+@pytest.mark.usefixtures("init_integration")
+async def test_boost_read_failure(
+    hass: HomeAssistant, mock_unit: MockModbusUnit, writes: list[WriteEvent]
+) -> None:
+    """Test boost fails cleanly when holiday mode cannot be read."""
+    mock_unit.fail_read(3, ModbusTimeoutError(), register_type="coil")
+    with pytest.raises(HomeAssistantError) as exc_info:
+        await hass.services.async_call(
+            BUTTON_DOMAIN,
+            SERVICE_PRESS,
+            {ATTR_ENTITY_ID: "button.domeo_evo_225_fl_start_boost"},
+            blocking=True,
+        )
+    assert exc_info.value.translation_key == "write_failed"
+    assert writes == []
 
 
 @pytest.mark.usefixtures("init_integration")
@@ -235,3 +272,29 @@ async def test_value_the_library_refuses(
         )
     assert exc_info.value.translation_key == "invalid_value"
     assert writes == []
+
+
+async def test_stop_boost_button_is_removed(
+    hass: HomeAssistant,
+    entity_registry: er.EntityRegistry,
+    mock_config_entry: MockConfigEntry,
+    mock_get_unit: object,
+) -> None:
+    """Test the stop boost button of 0.2.0-beta.1 leaves the registry."""
+    mock_config_entry.add_to_hass(hass)
+    entity_registry.async_get_or_create(
+        BUTTON_DOMAIN,
+        DOMAIN,
+        f"{MOCK_ENTRY_ID}_stop_boost",
+        config_entry=mock_config_entry,
+    )
+    await hass.config_entries.async_setup(mock_config_entry.entry_id)
+    await hass.async_block_till_done(wait_background_tasks=True)
+
+    assert (
+        entity_registry.async_get_entity_id(
+            BUTTON_DOMAIN, DOMAIN, f"{MOCK_ENTRY_ID}_stop_boost"
+        )
+        is None
+    )
+    assert hass.states.get("button.domeo_evo_225_fl_start_boost") is not None

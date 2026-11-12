@@ -14,9 +14,6 @@
       },
       "start_boost": {
         "default": "mdi:fan-chevron-up"
-      },
-      "stop_boost": {
-        "default": "mdi:fan-chevron-down"
       }
     },
     "number": {
