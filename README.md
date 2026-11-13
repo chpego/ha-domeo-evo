@@ -57,7 +57,7 @@
 
 **Not supported:** the previous Domeo range (Domeo 210, the previous Domeo DHU or Hygro, Flexeo, Ideo, and the Atacama sold by Leroy Merlin). It uses another register table, where the same addresses mean other settings, so the integration refuses these units when you add them ([#7](https://github.com/chpego/ha-domeo-modbus/issues/7)). "DHU" here means the DOMEO EVO DHU.
 
-**Why `domeo_modbus`?** The technical name (domain `domeo_modbus`, repository `ha-domeo-modbus`) is not tied to the EVO range so that the previous Domeo range can be added to this same integration later, with its own register table. Until then, only DOMEO EVO units are supported, and the integration is shown as **S&P DOMEO EVO**.
+**Why `domeo_modbus`?** The technical name (domain `domeo_modbus`, repository `ha-domeo-modbus`) is not tied to the EVO range so that the previous Domeo range can be added to this same integration later, with its own register table ([#15](https://github.com/chpego/ha-domeo-modbus/issues/15), testers welcome). Until then, only DOMEO EVO units are supported, and the integration is shown as **S&P DOMEO EVO**.
 
 Have one of these units? A test report with your diagnostics file is very welcome: [open an issue](https://github.com/chpego/ha-domeo-modbus/issues).
 
