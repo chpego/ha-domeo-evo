@@ -50,11 +50,14 @@
 
 | Unit | Status | Evidence |
 | --- | --- | --- |
-| **DOMEO EVO 225 FL / RD** | Readings confirmed | A real 225 FL RD ([HACF forum](https://forum.hacf.fr/t/vmc-s-p-domeo-evo-225-fl-via-modbus-tcp-rtu/69801/25)). Commands are being tested. |
+| **DOMEO EVO 225 RD** | Readings and commands confirmed | Two real 225 RD units ([#6](https://github.com/chpego/ha-domeo-modbus/issues/6), [#12](https://github.com/chpego/ha-domeo-modbus/issues/12)): readings, holiday mode, start boost. Filter reset is being confirmed. |
+| DOMEO EVO 225 FL | Expected to work | Same unit with a wired control panel, not yet tested |
 | DOMEO EVO 315, 450 | Expected to work | Same register table; airflow ranges per model from the S&P table |
 | DHU, Sérénité variants | Expected to work | Humidity regulation and AIRSENS probes follow the S&P table, tested on a simulator |
 
 **Not supported:** the previous Domeo range (Domeo 210, the previous Domeo DHU or Hygro, Flexeo, Ideo, and the Atacama sold by Leroy Merlin). It uses another register table, where the same addresses mean other settings, so the integration refuses these units when you add them ([#7](https://github.com/chpego/ha-domeo-modbus/issues/7)). "DHU" here means the DOMEO EVO DHU.
+
+**Why `domeo_modbus`?** The technical name (domain `domeo_modbus`, repository `ha-domeo-modbus`) is not tied to the EVO range so that the previous Domeo range can be added to this same integration later, with its own register table. Until then, only DOMEO EVO units are supported, and the integration is shown as **S&P DOMEO EVO**.
 
 Have one of these units? A test report with your diagnostics file is very welcome: [open an issue](https://github.com/chpego/ha-domeo-modbus/issues).
 

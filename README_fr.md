@@ -50,11 +50,14 @@
 
 | VMC | État | Preuve |
 | --- | --- | --- |
-| **DOMEO EVO 225 FL / RD** | Lectures confirmées | Une vraie 225 FL RD ([forum HACF](https://forum.hacf.fr/t/vmc-s-p-domeo-evo-225-fl-via-modbus-tcp-rtu/69801/25)). Les commandes sont en test. |
+| **DOMEO EVO 225 RD** | Lectures et commandes confirmées | Deux vraies 225 RD ([#6](https://github.com/chpego/ha-domeo-modbus/issues/6), [#12](https://github.com/chpego/ha-domeo-modbus/issues/12)) : lectures, mode vacances, démarrage du boost. Le reset filtre est en cours de confirmation. |
+| DOMEO EVO 225 FL | Devrait fonctionner | Même VMC avec une commande filaire, pas encore testée |
 | DOMEO EVO 315, 450 | Devrait fonctionner | Même table de registres ; plages de débit par modèle selon la table S&P |
 | Variantes DHU, Sérénité | Devrait fonctionner | Régulation hygro et sondes AIRSENS selon la table S&P, testées sur un simulateur |
 
 **Non prises en charge :** l'ancienne gamme Domeo (Domeo 210, ancienne Domeo DHU ou Hygro, Flexeo, Ideo, et l'Atacama vendue par Leroy Merlin). Elle utilise une autre table de registres, où les mêmes adresses correspondent à d'autres réglages : l'intégration refuse donc ces VMC à l'ajout ([#7](https://github.com/chpego/ha-domeo-modbus/issues/7)). Ici, « DHU » désigne la DOMEO EVO DHU.
+
+**Pourquoi `domeo_modbus` ?** Le nom technique (domaine `domeo_modbus`, dépôt `ha-domeo-modbus`) n'est pas lié à la gamme EVO, pour pouvoir ajouter plus tard l'ancienne gamme Domeo à cette même intégration, avec sa propre table de registres. D'ici là, seules les DOMEO EVO sont prises en charge, et l'intégration s'affiche sous le nom **S&P DOMEO EVO**.
 
 Vous avez l'une de ces VMC ? Un retour avec votre fichier de diagnostic est le bienvenu : [ouvrez une issue](https://github.com/chpego/ha-domeo-modbus/issues).
 
