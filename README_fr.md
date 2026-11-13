@@ -57,7 +57,7 @@
 
 **Non prises en charge :** l'ancienne gamme Domeo (Domeo 210, ancienne Domeo DHU ou Hygro, Flexeo, Ideo, et l'Atacama vendue par Leroy Merlin). Elle utilise une autre table de registres, où les mêmes adresses correspondent à d'autres réglages : l'intégration refuse donc ces VMC à l'ajout ([#7](https://github.com/chpego/ha-domeo-modbus/issues/7)). Ici, « DHU » désigne la DOMEO EVO DHU.
 
-**Pourquoi `domeo_modbus` ?** Le nom technique (domaine `domeo_modbus`, dépôt `ha-domeo-modbus`) n'est pas lié à la gamme EVO, pour pouvoir ajouter plus tard l'ancienne gamme Domeo à cette même intégration, avec sa propre table de registres. D'ici là, seules les DOMEO EVO sont prises en charge, et l'intégration s'affiche sous le nom **S&P DOMEO EVO**.
+**Pourquoi `domeo_modbus` ?** Le nom technique (domaine `domeo_modbus`, dépôt `ha-domeo-modbus`) n'est pas lié à la gamme EVO, pour pouvoir ajouter plus tard l'ancienne gamme Domeo à cette même intégration, avec sa propre table de registres ([#15](https://github.com/chpego/ha-domeo-modbus/issues/15), testeurs bienvenus). D'ici là, seules les DOMEO EVO sont prises en charge, et l'intégration s'affiche sous le nom **S&P DOMEO EVO**.
 
 Vous avez l'une de ces VMC ? Un retour avec votre fichier de diagnostic est le bienvenu : [ouvrez une issue](https://github.com/chpego/ha-domeo-modbus/issues).
 
