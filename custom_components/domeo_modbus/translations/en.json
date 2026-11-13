@@ -319,7 +319,7 @@
     },
     "issues": {
         "modbus_control_off": {
-            "description": "{name} reports that it is controlled by its control panel, not over Modbus: jumper JP1 on its board is open. Readings work, but every command (boost, holiday mode, bypass, settings) is refused.\n\nTo fix it, cut the power to the unit, remove its front panel and close jumper JP1. Once JP1 is closed the unit ignores its control panel, and Home Assistant controls it. This warning clears itself at the next reading after JP1 is closed.",
+            "description": "{name} reports that it is controlled by its control panel, not over Modbus: jumper JP1 on its board is open. Readings work, but every command (boost, holiday mode, bypass, settings) is refused.\n\nTo fix it, cut the power to the unit, remove its front panel and close jumper JP1. Once JP1 is closed, Home Assistant controls the unit. According to S&P, a wired control panel then stops working; a radio control panel (RD) keeps working alongside Home Assistant. This warning clears itself at the next reading after JP1 is closed.",
             "title": "{name}: jumper JP1 is open"
         }
     },

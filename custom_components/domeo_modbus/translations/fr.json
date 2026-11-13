@@ -319,7 +319,7 @@
   },
   "issues": {
     "modbus_control_off": {
-      "description": "{name} indique qu'elle est pilotée par sa télécommande et non par Modbus : le cavalier JP1 de sa carte est ouvert. Les lectures fonctionnent, mais toutes les commandes (boost, mode vacances, by-pass, réglages) sont refusées.\n\nPour corriger, coupez l'alimentation de la VMC, retirez la face avant et fermez le cavalier JP1. Une fois JP1 fermé, la VMC ignore sa télécommande et c'est Home Assistant qui la pilote. Cet avertissement disparaît de lui-même à la lecture suivante.",
+      "description": "{name} indique qu'elle est pilotée par sa télécommande et non par Modbus : le cavalier JP1 de sa carte est ouvert. Les lectures fonctionnent, mais toutes les commandes (boost, mode vacances, by-pass, réglages) sont refusées.\n\nPour corriger, coupez l'alimentation de la VMC, retirez la face avant et fermez le cavalier JP1. Une fois JP1 fermé, c'est Home Assistant qui pilote la VMC. D'après S&P, une commande filaire ne fonctionne alors plus ; une télécommande radio (RD) continue de fonctionner en même temps que Home Assistant. Cet avertissement disparaît de lui-même à la lecture suivante.",
       "title": "{name} : le cavalier JP1 est ouvert"
     }
   },

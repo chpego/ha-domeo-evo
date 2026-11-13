@@ -61,7 +61,7 @@ Have one of these units? A test report with your diagnostics file is very welcom
 ## Prerequisites
 
 - Home Assistant **2026.10.2** or newer.
-- Jumper **JP1** closed on the unit's board. With JP1 open, the unit answers readings but refuses every command. Once JP1 is closed, the unit ignores its own control panel. Cut the power before you open the unit.
+- Jumper **JP1** closed on the unit's board. With JP1 open, the unit answers readings but refuses every command. Once JP1 is closed, the unit takes orders over Modbus. According to S&P, a wired control panel then stops working; a radio control panel (RD) keeps working, as a tester's unit showed ([#12](https://github.com/chpego/ha-domeo-modbus/issues/12)). Cut the power before you open the unit.
 - A link to the unit's RS485 terminals (A, B, GND):
   - a **gateway** (Waveshare RS485 TO ETH, Elfin EW11…) in **Modbus TCP to RTU** mode, or
   - a **USB RS485 adapter** on the Home Assistant host.

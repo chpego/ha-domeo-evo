@@ -62,7 +62,7 @@ body:
     attributes:
       label: Integration version
       description: Settings → Marketplace → S&P DOMEO EVO
-      placeholder: 0.2.0-beta.1
+      placeholder: 0.2.0-beta.2
     validations:
       required: true
   - type: textarea

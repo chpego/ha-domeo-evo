@@ -61,7 +61,7 @@ Vous avez l'une de ces VMC ? Un retour avec votre fichier de diagnostic est le b
 ## Prérequis
 
 - Home Assistant **2026.10.2** ou plus récent.
-- Cavalier **JP1** fermé sur la carte de la VMC. JP1 ouvert, la VMC répond aux lectures mais refuse toutes les commandes. Une fois JP1 fermé, la VMC ignore sa propre télécommande. Coupez l'alimentation avant d'ouvrir la VMC.
+- Cavalier **JP1** fermé sur la carte de la VMC. JP1 ouvert, la VMC répond aux lectures mais refuse toutes les commandes. Une fois JP1 fermé, la VMC obéit aux commandes Modbus. D'après S&P, une commande filaire ne fonctionne alors plus ; une télécommande radio (RD) continue de fonctionner, comme l'a montré la VMC d'un testeur ([#12](https://github.com/chpego/ha-domeo-modbus/issues/12)). Coupez l'alimentation avant d'ouvrir la VMC.
 - Une liaison vers le bornier RS485 de la VMC (A, B, GND) :
   - une **passerelle** (Waveshare RS485 TO ETH, Elfin EW11…) en mode **Modbus TCP vers RTU**, ou
   - un **adaptateur USB RS485** sur la machine Home Assistant.
