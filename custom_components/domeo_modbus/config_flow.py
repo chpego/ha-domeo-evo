@@ -1,4 +1,4 @@
-"""Config flow for the S&P DOMEO EVO integration."""
+"""Config flow for the S&P DOMEO EVO integration (and the Domeo 210)."""
 
 from collections.abc import Mapping
 import logging
@@ -29,6 +29,7 @@ from .const import (
     CONF_VARIANT,
     DEFAULT_PORT,
     DOMAIN,
+    MODEL_DOMEO_210,
     PARITIES,
     PARITY_EVEN,
     TYPE_SERIAL,
@@ -37,12 +38,13 @@ from .const import (
 from .domeo_evo_modbus import (
     DEFAULT_BAUDRATE,
     DEFAULT_UNIT_ID,
-    DomeoEvo,
+    AnyDomeo,
     Model,
+    NotADomeo210Error,
     NotADomeoEvoError,
     Variant,
 )
-from .helpers import create_modbus_params
+from .helpers import create_device, create_modbus_params
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -60,7 +62,7 @@ UNIT_ID_SELECTOR = probatio.All(
 DEVICE_FIELDS = {
     probatio.Required(CONF_MODEL, default=Model.DOMEO_EVO_225.value): SelectSelector(
         SelectSelectorConfig(
-            options=[model.value for model in Model],
+            options=[*(model.value for model in Model), MODEL_DOMEO_210],
             translation_key=CONF_MODEL,
             mode=SelectSelectorMode.DROPDOWN,
         )
@@ -122,11 +124,27 @@ class _UnitSilentError(Exception):
     """The link is up, but the unit behind it does not answer."""
 
 
-async def _async_probe(hass: HomeAssistant, data: Mapping[str, Any]) -> DomeoEvo:
+def _is_210(data: Mapping[str, Any]) -> bool:
+    """Whether config entry data describes a Domeo 210."""
+    return bool(data[CONF_MODEL] == MODEL_DOMEO_210)
+
+
+def _link_data(connection_type: str, user_input: Mapping[str, Any]) -> dict[str, Any]:
+    """The config entry data for what the user entered.
+
+    The Domeo 210 has no variant to choose, so the field is ignored for it.
+    """
+    data = {CONF_TYPE: connection_type, **user_input}
+    if _is_210(data):
+        data[CONF_VARIANT] = Variant.FL.value
+    return data
+
+
+async def _async_probe(hass: HomeAssistant, data: Mapping[str, Any]) -> AnyDomeo:
     """Read the unit behind these link settings, or raise."""
     params = create_modbus_params(data)
     async with async_get_temporary_unit(hass, params, data[CONF_UNIT_ID]) as unit:
-        device = DomeoEvo(unit, Model(data[CONF_MODEL]), Variant(data[CONF_VARIANT]))
+        device = create_device(unit, data)
         try:
             await device.async_validate()
         except ModbusTimeoutError as err:
@@ -180,7 +198,7 @@ class DomeoEvoConfigFlow(ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
         placeholders: dict[str, str] = {}
         if user_input is not None:
-            data = {CONF_TYPE: connection_type, **user_input}
+            data = _link_data(connection_type, user_input)
             # The unit has no serial number to use as a unique ID.
             self._async_abort_entries_match(
                 {key: data[key] for key in IDENTITY_KEYS[connection_type]}
@@ -233,13 +251,20 @@ class DomeoEvoConfigFlow(ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
         placeholders: dict[str, str] = {}
         if user_input is not None:
-            data = {CONF_TYPE: connection_type, **user_input}
+            data = _link_data(connection_type, user_input)
             if any(
                 _same_unit(data, other.data)
                 for other in self._async_current_entries()
                 if other.entry_id != entry.entry_id
             ):
                 return self.async_abort(reason="already_configured")
+            # Another range has other entities: the old ones would linger.
+            if _is_210(data) != _is_210(entry.data):
+                return self.async_show_form(
+                    step_id=step_id,
+                    data_schema=self.add_suggested_values_to_schema(schema, user_input),
+                    errors={"base": "range_changed"},
+                )
 
             # One port cannot run two line settings at once, so a running
             # entry gives up its link before the new settings are probed.
@@ -276,7 +301,7 @@ class DomeoEvoConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def _async_validate(
         self, data: dict[str, Any]
-    ) -> tuple[DomeoEvo | None, dict[str, str], dict[str, str]]:
+    ) -> tuple[AnyDomeo | None, dict[str, str], dict[str, str]]:
         """Probe the unit, returning it or the errors to show instead."""
         try:
             device = await _async_probe(self.hass, data)
@@ -284,6 +309,8 @@ class DomeoEvoConfigFlow(ConfigFlow, domain=DOMAIN):
             return None, {"base": "unit_silent"}, {}
         except NotADomeoEvoError:
             return None, {"base": "not_a_domeo_evo"}, {}
+        except NotADomeo210Error:
+            return None, {"base": "not_a_domeo_210"}, {}
         except ModbusError, HomeAssistantError:
             return None, {"base": "cannot_connect"}, {}
         except Exception:
