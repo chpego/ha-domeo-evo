@@ -58,7 +58,7 @@
 
 **Domeo 210, still unconfirmed:** whether input registers 22 and 23 (exhaust and outdoor temperatures) are swapped, since the two S&P tables disagree, and whether holiday mode and the automatic bypass turn on with 1, as the 2017 table says. The 210 does not report jumper JP1, so a refused command is the only sign that JP1 is open. In the Europe version (three speeds and standby) there is no boost button, and the holiday switch is a standby switch.
 
-**Not supported:** the rest of the previous Domeo range (the previous Domeo DHU or Hygro, Flexeo, Ideo, and the Atacama sold by Leroy Merlin). It uses other register tables, where the same addresses mean other settings, so the integration refuses these units when you add them as a DOMEO EVO ([#7](https://github.com/chpego/ha-domeo-modbus/issues/7)). "DHU" here means the DOMEO EVO DHU.
+**Not supported:** the rest of the previous Domeo range (the previous Domeo DHU or Hygro, Flexeo, Ideo, and the Atacama sold by Leroy Merlin). It uses other register tables, where the same addresses mean other settings, so the integration refuses these units when you add them as a DOMEO EVO ([#7](https://github.com/chpego/ha-domeo-modbus/issues/7)). "DHU" here means the DOMEO EVO DHU. The Atacama is said to have the same board as the Domeo 210 (HACF topic 3947): adding it as a Domeo 210 may work, but nobody has tried yet.
 
 **Why `domeo_modbus`?** The technical name (domain `domeo_modbus`, repository `ha-domeo-modbus`) is not tied to the EVO range, so the previous Domeo range goes into this same integration, with its own register table ([#15](https://github.com/chpego/ha-domeo-modbus/issues/15), testers welcome). The integration is still shown as **S&P DOMEO EVO**.
 

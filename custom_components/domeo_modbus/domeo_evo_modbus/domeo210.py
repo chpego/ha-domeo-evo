@@ -2,7 +2,7 @@
 
 Its register table ("PARÁMETROS MODBUS RECUPERADOR DOMEO 210", 2017) shares
 nothing with the DOMEO EVO's: the same addresses hold other values
-(chpego/ha-domeo-evo#7). It numbers every register from 0, so the table's
+(chpego/ha-domeo-modbus#7). It numbers every register from 0, so the table's
 numbers are the protocol (PDU) addresses as they are. A Domeo 210 YAML in use
 since 2021 reads them at those addresses (HACF topic 3947).
 
@@ -60,8 +60,6 @@ FLOW_LIMITS_210 = FlowLimits(
     low=(60, 150), high=(120, 210), freecooling=(120, 210), maximum=(120, 210)
 )
 
-# The table documents temperatures from -35.0 to +52.0 °C, in d°C.
-_TEMPERATURE_RANGE = (-350, 520)
 # The highest airflow the unit can report, in m³/h.
 _MAX_AIRFLOW = 210
 # The highest firmware version the table documents (xx.x, times ten).
@@ -436,25 +434,16 @@ class Domeo210(Device):
         for name, value, limits in (
             ("low airflow", settings.low_flow, FLOW_LIMITS_210.low),
             ("boost airflow", settings.high_flow, FLOW_LIMITS_210.high),
-            ("freecooling airflow", settings.freecooling_flow, FLOW_LIMITS_210.high),
+            (
+                "freecooling airflow",
+                settings.freecooling_flow,
+                FLOW_LIMITS_210.freecooling,
+            ),
         ):
             if value is None or not limits[0] <= value <= limits[1]:
                 raise NotADomeo210Error(f"unexpected {name} {value!r}")
-        # On a DOMEO EVO, input 22 to 24 are AIRSENS probe types (0 to 3), so
-        # this check alone does not tell the two apart; the airflows do.
-        readings = self.readings
-        for name, temperature in (
-            ("extract", readings.extract_temperature),
-            ("exhaust", readings.exhaust_temperature),
-            ("outdoor", readings.outdoor_temperature),
-            ("supply", readings.supply_temperature),
-        ):
-            if temperature is None or not (
-                _TEMPERATURE_RANGE[0] / 10 <= temperature <= _TEMPERATURE_RANGE[1] / 10
-            ):
-                raise NotADomeo210Error(
-                    f"unexpected {name} temperature {temperature!r}"
-                )
+        # The temperatures are not checked: a faulty or missing probe may read
+        # anything, and the airflows already tell a DOMEO EVO apart.
 
     async def async_update_readings(self) -> UpdateReport:
         """Refresh what the unit measures and the state of its switches."""

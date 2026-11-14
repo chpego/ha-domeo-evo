@@ -124,13 +124,18 @@ class _UnitSilentError(Exception):
     """The link is up, but the unit behind it does not answer."""
 
 
+def _is_210(data: Mapping[str, Any]) -> bool:
+    """Whether config entry data describes a Domeo 210."""
+    return bool(data[CONF_MODEL] == MODEL_DOMEO_210)
+
+
 def _link_data(connection_type: str, user_input: Mapping[str, Any]) -> dict[str, Any]:
     """The config entry data for what the user entered.
 
     The Domeo 210 has no variant to choose, so the field is ignored for it.
     """
     data = {CONF_TYPE: connection_type, **user_input}
-    if data[CONF_MODEL] == MODEL_DOMEO_210:
+    if _is_210(data):
         data[CONF_VARIANT] = Variant.FL.value
     return data
 
@@ -253,6 +258,13 @@ class DomeoEvoConfigFlow(ConfigFlow, domain=DOMAIN):
                 if other.entry_id != entry.entry_id
             ):
                 return self.async_abort(reason="already_configured")
+            # Another range has other entities: the old ones would linger.
+            if _is_210(data) != _is_210(entry.data):
+                return self.async_show_form(
+                    step_id=step_id,
+                    data_schema=self.add_suggested_values_to_schema(schema, user_input),
+                    errors={"base": "range_changed"},
+                )
 
             # One port cannot run two line settings at once, so a running
             # entry gives up its link before the new settings are probed.

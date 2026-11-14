@@ -10,8 +10,8 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .coordinator import DomeoEvoConfigEntry
-from .domeo_evo_modbus import AutoMode, ClpContact, Domeo210, DomeoEvo
+from .coordinator import DomeoEvoConfigEntry, DomeoEvoRuntimeData
+from .domeo_evo_modbus import AutoMode, ClpContact, DomeoEvo
 from .entity import DomeoEvoEntity, DomeoEvoEntityDescription
 
 PARALLEL_UPDATES = 1
@@ -64,10 +64,11 @@ async def async_setup_entry(
 ) -> None:
     """Set up the DOMEO EVO selects. The Domeo 210 has none."""
     runtime_data = entry.runtime_data
-    if isinstance(runtime_data.device, Domeo210):
+    device = runtime_data.device
+    if not isinstance(device, DomeoEvo):
         return
     async_add_entities(
-        DomeoEvoSelect(runtime_data, description) for description in SELECTS
+        DomeoEvoSelect(runtime_data, description, device) for description in SELECTS
     )
 
 
@@ -75,6 +76,16 @@ class DomeoEvoSelect(DomeoEvoEntity, SelectEntity):
     """A DOMEO EVO select."""
 
     entity_description: DomeoEvoSelectEntityDescription
+
+    def __init__(
+        self,
+        runtime_data: DomeoEvoRuntimeData,
+        entity_description: DomeoEvoSelectEntityDescription,
+        device: DomeoEvo,
+    ) -> None:
+        """Initialize the select for a DOMEO EVO, the only range with selects."""
+        super().__init__(runtime_data, entity_description)
+        self._device = device
 
     @property
     @override
@@ -88,10 +99,3 @@ class DomeoEvoSelect(DomeoEvoEntity, SelectEntity):
         """Write the selected option to the unit."""
         value = self.entity_description.options_enum[option.upper()]
         await self._async_write(self.entity_description.write_fn(self._device, value))
-
-    @property
-    def _device(self) -> DomeoEvo:
-        """The unit, which only has selects when it is a DOMEO EVO."""
-        device = self.coordinator.device
-        assert isinstance(device, DomeoEvo)
-        return device

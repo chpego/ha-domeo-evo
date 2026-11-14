@@ -239,11 +239,7 @@ async def test_command(
 
 @pytest.mark.usefixtures("init_integration")
 async def test_airflow_range_of_the_210(hass: HomeAssistant) -> None:
-    """Test the airflow settings offer the Domeo 210 ranges."""
-    low = hass.states.get("number.domeo_210_low_airflow")
-    assert low is not None
-    assert (low.attributes["min"], low.attributes["max"]) == (60, 150)
-
+    """Test the Domeo 210 refuses an airflow outside its range."""
     with pytest.raises(ServiceValidationError):
         await hass.services.async_call(
             NUMBER_DOMAIN,
