@@ -177,7 +177,7 @@ async def test_user_flow_probe_raises(
     """Test errors raised around the probe itself."""
     flow_id = await _start(hass, "tcp")
     with patch(
-        "custom_components.domeo_modbus.config_flow.DomeoEvo.async_validate",
+        "custom_components.domeo_modbus.domeo_evo_modbus.DomeoEvo.async_validate",
         side_effect=side_effect,
     ):
         result = await hass.config_entries.flow.async_configure(flow_id, MOCK_TCP_INPUT)

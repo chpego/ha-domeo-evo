@@ -54,10 +54,13 @@
 | DOMEO EVO 225 FL | Devrait fonctionner | Même VMC avec une commande filaire, pas encore testée |
 | DOMEO EVO 315, 450 | Devrait fonctionner | Même table de registres ; plages de débit par modèle selon la table S&P |
 | Variantes DHU, Sérénité | Devrait fonctionner | Régulation hygro et sondes AIRSENS selon la table S&P, testées sur un simulateur |
+| Domeo 210 (ancienne gamme) | En test | Construite sur la table S&P de 2017 et un YAML Domeo 210 utilisé depuis 2021 ; pas encore testée par un propriétaire ([#15](https://github.com/chpego/ha-domeo-modbus/issues/15)). Choisissez **Domeo 210** dans la liste des modèles. |
 
-**Non prises en charge :** l'ancienne gamme Domeo (Domeo 210, ancienne Domeo DHU ou Hygro, Flexeo, Ideo, et l'Atacama vendue par Leroy Merlin). Elle utilise une autre table de registres, où les mêmes adresses correspondent à d'autres réglages : l'intégration refuse donc ces VMC à l'ajout ([#7](https://github.com/chpego/ha-domeo-modbus/issues/7)). Ici, « DHU » désigne la DOMEO EVO DHU.
+**Domeo 210, encore à confirmer :** si les registres input 22 et 23 (températures de rejet et d'air neuf) sont inversés, car les deux tables S&P se contredisent, et si le mode vacances et le by-pass automatique s'activent avec 1, comme le dit la table de 2017. La 210 ne signale pas le cavalier JP1 : une commande refusée est le seul signe que JP1 est ouvert. Dans la version Europe (trois vitesses et veille), il n'y a pas de bouton boost, et l'interrupteur vacances devient un interrupteur de veille.
 
-**Pourquoi `domeo_modbus` ?** Le nom technique (domaine `domeo_modbus`, dépôt `ha-domeo-modbus`) n'est pas lié à la gamme EVO, pour pouvoir ajouter plus tard l'ancienne gamme Domeo à cette même intégration, avec sa propre table de registres ([#15](https://github.com/chpego/ha-domeo-modbus/issues/15), testeurs bienvenus). D'ici là, seules les DOMEO EVO sont prises en charge, et l'intégration s'affiche sous le nom **S&P DOMEO EVO**.
+**Non prises en charge :** le reste de l'ancienne gamme Domeo (ancienne Domeo DHU ou Hygro, Flexeo, Ideo, et l'Atacama vendue par Leroy Merlin). Elle utilise d'autres tables de registres, où les mêmes adresses correspondent à d'autres réglages : l'intégration refuse donc ces VMC si on les ajoute comme DOMEO EVO ([#7](https://github.com/chpego/ha-domeo-modbus/issues/7)). Ici, « DHU » désigne la DOMEO EVO DHU.
+
+**Pourquoi `domeo_modbus` ?** Le nom technique (domaine `domeo_modbus`, dépôt `ha-domeo-modbus`) n'est pas lié à la gamme EVO : l'ancienne gamme Domeo entre donc dans cette même intégration, avec sa propre table de registres ([#15](https://github.com/chpego/ha-domeo-modbus/issues/15), testeurs bienvenus). L'intégration s'affiche toujours sous le nom **S&P DOMEO EVO**.
 
 Vous avez l'une de ces VMC ? Un retour avec votre fichier de diagnostic est le bienvenu : [ouvrez une issue](https://github.com/chpego/ha-domeo-modbus/issues).
 

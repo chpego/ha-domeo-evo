@@ -11,7 +11,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import DomeoEvoConfigEntry
-from .domeo_evo_modbus import AutoMode, ClpContact, DomeoEvo
+from .domeo_evo_modbus import AutoMode, ClpContact, Domeo210, DomeoEvo
 from .entity import DomeoEvoEntity, DomeoEvoEntityDescription
 
 PARALLEL_UPDATES = 1
@@ -62,8 +62,10 @@ async def async_setup_entry(
     entry: DomeoEvoConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up the DOMEO EVO selects."""
+    """Set up the DOMEO EVO selects. The Domeo 210 has none."""
     runtime_data = entry.runtime_data
+    if isinstance(runtime_data.device, Domeo210):
+        return
     async_add_entities(
         DomeoEvoSelect(runtime_data, description) for description in SELECTS
     )
@@ -78,13 +80,18 @@ class DomeoEvoSelect(DomeoEvoEntity, SelectEntity):
     @override
     def current_option(self) -> str | None:
         """Return the selected option."""
-        value = self.entity_description.value_fn(self.coordinator.device)
+        value = self.entity_description.value_fn(self._device)
         return None if value is None else value.name.lower()
 
     @override
     async def async_select_option(self, option: str) -> None:
         """Write the selected option to the unit."""
         value = self.entity_description.options_enum[option.upper()]
-        await self._async_write(
-            self.entity_description.write_fn(self.coordinator.device, value)
-        )
+        await self._async_write(self.entity_description.write_fn(self._device, value))
+
+    @property
+    def _device(self) -> DomeoEvo:
+        """The unit, which only has selects when it is a DOMEO EVO."""
+        device = self.coordinator.device
+        assert isinstance(device, DomeoEvo)
+        return device

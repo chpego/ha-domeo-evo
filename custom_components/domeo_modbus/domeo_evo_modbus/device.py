@@ -50,6 +50,9 @@ class DomeoEvo(Device):
     decides whether the humidity regulation registers are read.
     """
 
+    readings_components = READINGS
+    settings_components = SETTINGS
+
     def __init__(
         self,
         unit: ModbusUnit,
